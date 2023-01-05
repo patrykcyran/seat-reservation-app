@@ -15,4 +15,5 @@ public class Equipment {
 
     @Column(nullable = false)
     private String name;
+
 }

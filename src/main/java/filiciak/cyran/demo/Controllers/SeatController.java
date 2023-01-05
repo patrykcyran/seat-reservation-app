@@ -13,7 +13,6 @@ public class SeatController {
 
     private final SeatRepository repository;
 
-    @Autowired
     public SeatController(SeatRepository repository) {
         this.repository = repository;
     }

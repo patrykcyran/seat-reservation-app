@@ -27,7 +27,6 @@ public class Seat {
     private SeatType type;
 
     @OneToMany
-    @JoinColumn(nullable = true, name = "equipment")
     private List<Equipment> equipments;
 
     @ManyToOne

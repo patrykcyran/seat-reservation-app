@@ -19,7 +19,6 @@ public class SeatService {
     private final Logger log = LoggerFactory.getLogger(SeatService.class);
     private final SeatRepository seatRepository;
 
-    @Autowired
     public SeatService(SeatRepository seatRepository) {
         this.seatRepository = seatRepository;
     }
