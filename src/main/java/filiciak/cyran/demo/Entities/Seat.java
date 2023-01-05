@@ -3,13 +3,15 @@ package filiciak.cyran.demo.Entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity
 @Data
 @Table(name = "seat")
 public class Seat {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
     private Integer id;
 
@@ -23,6 +25,14 @@ public class Seat {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private SeatType type;
+
+    @OneToMany
+    @JoinColumn(nullable = true, name = "equipment")
+    private List<Equipment> equipments;
+
+    @ManyToOne
+    @JoinColumn(name = "office")
+    private Office office;
 
     public Seat() {}
 

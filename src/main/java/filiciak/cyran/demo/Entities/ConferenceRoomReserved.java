@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class ConferenceRoomReserved {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
     private Integer id;
 
