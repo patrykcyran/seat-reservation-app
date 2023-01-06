@@ -3,10 +3,16 @@ package filiciak.cyran.demo.Entities;
 import javax.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Entity
 @Table
-public class Office {
+public class Office implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,4 +21,5 @@ public class Office {
 
     @Column(nullable = false)
     private String name;
+
 }

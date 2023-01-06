@@ -3,19 +3,22 @@ package filiciak.cyran.demo.Entities;
 import javax.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Data
 @Table(name = "seat")
-public class Seat {
+public class Seat implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
     private Integer id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private Integer seatNumber;
 
     @Column(nullable = false)
@@ -29,9 +32,8 @@ public class Seat {
     @OneToMany
     private List<Equipment> equipments;
 
-    @ManyToOne
-    @JoinColumn(name = "office")
-    private Office office;
+    @Column(nullable = false)
+    private Integer officeID;
 
     public Seat() {}
 

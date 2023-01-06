@@ -3,9 +3,9 @@ package filiciak.cyran.demo.Services;
 import filiciak.cyran.demo.Entities.Office;
 import filiciak.cyran.demo.Entities.Seat;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
+import filiciak.cyran.demo.Repositories.OfficeRepository;
 import filiciak.cyran.demo.Repositories.SeatRepository;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.slf4j.Logger;
@@ -18,14 +18,22 @@ public class SeatService {
 
     private final Logger log = LoggerFactory.getLogger(SeatService.class);
     private final SeatRepository seatRepository;
+    private final OfficeRepository officeRepository;
 
-    public SeatService(SeatRepository seatRepository) {
+    public SeatService(SeatRepository seatRepository, OfficeRepository officeRepository) {
         this.seatRepository = seatRepository;
+        this.officeRepository = officeRepository;
     }
 
     public Seat save(Seat seat) throws BadRequestException {
         if(seat.getId() != null){
             throw new BadRequestException("A new seat cannot already have an ID");
+        }
+        if(!officeRepository.existsById(seat.getOfficeID())){
+            throw new BadRequestException("An office does not exist");
+        }
+        if(!(seatRepository.findSeatBySeatNumberAndOfficeId(seat.getSeatNumber(), seat.getOfficeID()) == null)){
+            throw new BadRequestException("Seat with this seatNumber exist in this office");
         }
         log.debug("Request to save seat : {} ", seat);
         return seatRepository.save(seat);
@@ -49,14 +57,14 @@ public class SeatService {
         return seatRepository.findAll();
     }
 
-    public Optional<Seat> findById(Integer id) {
+    public Seat findById(Integer id) {
         log.debug("Request to get Seat : {}", id);
-        return seatRepository.findById(id);
+        return seatRepository.findById(id).get();
     }
 
-    public List<Seat> findAllByOffice(Office office){
-        log.debug("Request to get all Seats from {} ", office);
-        return seatRepository.findSeatsByOfficeId(office.getId());
+    public List<Seat> findAllByOffice(Integer officeId){
+        log.debug("Request to get all Seats from {} ", officeRepository.findById(officeId).get());
+        return seatRepository.findSeatsByOfficeId(officeId);
     }
 
     public void delete(Integer id) throws BadRequestException {
