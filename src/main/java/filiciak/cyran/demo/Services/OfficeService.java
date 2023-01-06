@@ -31,16 +31,12 @@ public class OfficeService {
         return officeRepository.save(office);
     }
 
-    public Office update(Office office, Integer id) throws BadRequestException {
+    public Office update(Office office) throws BadRequestException {
         if(office.getId() == null){
             throw new BadRequestException("Office does not exist");
         }
-        if(office.getId() != id){
-            int temp = office.getId();
-            throw new BadRequestException(temp + "Invalid id");
-        }
-        if(!officeRepository.existsById(id)){
-            throw new BadRequestException("Office with id " + id + " does not exist");
+        if(!officeRepository.existsById(office.getId())){
+            throw new BadRequestException("Office with id " + office.getId() + " does not exist");
         }
         return officeRepository.save(office);
     }

@@ -39,15 +39,12 @@ public class SeatService {
         return seatRepository.save(seat);
     }
 
-    public Seat update(Seat seat, Integer id) throws BadRequestException {
+    public Seat update(Seat seat) throws BadRequestException {
         if(seat.getId() == null){
             throw new BadRequestException("Seat does not exist");
         }
-        if(seat.getId() != id){
-            throw new BadRequestException("Invalid id");
-        }
-        if(!seatRepository.existsById(id)){
-            throw new BadRequestException("Seat with id " + id + " does not exist");
+        if(!seatRepository.existsById(seat.getId())){
+            throw new BadRequestException("Seat with id " + seat.getId() + " does not exist");
         }
         return seatRepository.save(seat);
     }

@@ -1,6 +1,8 @@
 package filiciak.cyran.demo.Entities;
 
 import javax.persistence.*;
+
+import filiciak.cyran.demo.Services.AddressService;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -22,4 +24,6 @@ public class Office implements Serializable {
     @Column(nullable = false)
     private String name;
 
+    @OneToOne
+    private Address address;
 }

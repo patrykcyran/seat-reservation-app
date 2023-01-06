@@ -26,17 +26,21 @@ public class OfficeController {
     }
 
     @PostMapping
-    public ResponseEntity<Office> createOffice(@RequestBody Office office) throws BadRequestException {
-        log.debug("REST request to save Office : {}", office);
-        Office createdOffice = officeService.save(office);
-        return new ResponseEntity<>(createdOffice, HttpStatus.CREATED);
+    public ResponseEntity<Office> createOffice(@RequestBody Office office, @RequestHeader String authorization) throws BadRequestException {
+        if (authorization.equals("admin")) {
+            log.debug("REST request to save Office : {}", office);
+            Office createdOffice = officeService.save(office);
+            return new ResponseEntity<>(createdOffice, HttpStatus.CREATED);
+        } else throw new BadRequestException("Authorization header is invalid.");
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Office> updateOffice(@PathVariable Integer id, @RequestBody Office office) throws BadRequestException {
-        log.debug("REST request to update Office : {}, {}", id, office);
-        Office updatedOffice = officeService.update(office, id);
-        return new ResponseEntity<>(updatedOffice, HttpStatus.OK);
+    @PutMapping()
+    public ResponseEntity<Office> updateOffice( @RequestBody Office office, @RequestHeader String authorization) throws BadRequestException {
+        if (authorization.equals("admin")) {
+            log.debug("REST request to update Office : {}", office);
+            Office updatedOffice = officeService.update(office);
+            return new ResponseEntity<>(updatedOffice, HttpStatus.OK);
+        } else throw new BadRequestException("Authorization header is invalid.");
     }
 
     @GetMapping("/all")
@@ -46,8 +50,16 @@ public class OfficeController {
     }
 
     @GetMapping("/{id}")
-    public Office getOffice(@PathVariable Integer id){
+    public Office getOffice(@PathVariable Integer id) {
         log.debug("REST request to get Office : {}", id);
         return officeService.findById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteOffice(@PathVariable Integer id, @RequestHeader String authorization) throws BadRequestException {
+        if (authorization.equals("admin")) {
+            log.debug("REST request to delete Office : {}", id);
+            officeService.delete(id);
+        } else throw new BadRequestException("Authorization header is invalid.");
     }
 }
