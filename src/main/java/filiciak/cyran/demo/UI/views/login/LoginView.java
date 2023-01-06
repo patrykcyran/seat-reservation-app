@@ -33,7 +33,8 @@ public class LoginView extends Div {
         add(createTitle());
         add(createFormLayout());
         add(createButtonLayout());
-
+        firstNameTextField.setValue("Patryk");
+        lastNameTextField.setValue("Cyran");
 
         loginButton.addClickListener(e -> {
             String firstName;
