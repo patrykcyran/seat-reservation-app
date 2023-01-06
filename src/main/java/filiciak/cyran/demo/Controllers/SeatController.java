@@ -5,6 +5,7 @@ import filiciak.cyran.demo.Entities.Seat;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
 import filiciak.cyran.demo.Services.OfficeService;
 import filiciak.cyran.demo.Services.SeatService;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,33 +22,36 @@ public class SeatController {
     private final Logger log = LoggerFactory.getLogger(SeatController.class);
 
     private final SeatService seatService;
-    private final OfficeService officeService;
 
-    public SeatController(SeatService seatService, OfficeService officeService) {
+    public SeatController(SeatService seatService) {
         this.seatService = seatService;
-        this.officeService = officeService;
     }
 
 
     @PostMapping
-    public ResponseEntity<Seat> createSeat(@RequestBody Seat seat) throws BadRequestException {
-        log.debug("REST request to save Seat : {}", seat);
-        Seat createdSeat = seatService.save(seat);
-        return new ResponseEntity<>(createdSeat, HttpStatus.CREATED);
+    public ResponseEntity<Seat> createSeat(@RequestBody Seat seat, @RequestHeader String authorization) throws BadRequestException {
+        if (authorization.equals("admin")) {
+            log.debug("REST request to save Seat : {}", seat);
+            Seat createdSeat = seatService.save(seat);
+            return new ResponseEntity<>(createdSeat, HttpStatus.CREATED);
+        } else throw new BadRequestException("Authorization header is invalid.");
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Seat> updateSeat(@PathVariable Integer id, @RequestBody Seat seat) throws BadRequestException {
-        log.debug("REST request to update Seat : {}, {}", id, seat);
-        Seat updatedSeat = seatService.update(seat, id);
-        return new ResponseEntity<>(updatedSeat, HttpStatus.OK);
+    @PutMapping()
+    public ResponseEntity<Seat> updateSeat(@RequestBody Seat seat, @RequestHeader String authorization) throws BadRequestException {
+        if (authorization.equals("admin")) {
+            log.debug("REST request to update Seat : {}", seat);
+            Seat updatedSeat = seatService.update(seat);
+            return new ResponseEntity<>(updatedSeat, HttpStatus.OK);
+        } else throw new BadRequestException("Authorization header is invalid.");
     }
 
     @GetMapping("/allFromOffice/{officeId}")
-    public List<Seat> allFromOffice(@PathVariable Integer officeId){
+    public List<Seat> allFromOffice(@PathVariable Integer officeId) {
         log.debug("REST request to get all of Seats from the office");
         return seatService.findAllByOffice(officeId);
     }
+
     @GetMapping("/all")
     public List<Seat> all() {
         log.debug("REST request to get all of Seats");
@@ -55,8 +59,16 @@ public class SeatController {
     }
 
     @GetMapping("/{id}")
-    public Seat getSeat(@PathVariable Integer id){
+    public Seat getSeat(@PathVariable Integer id) {
         log.debug("REST request to get Seat : {}", id);
         return seatService.findById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteSeat(@PathVariable Integer id, @RequestHeader String authorization) throws BadRequestException {
+        if (authorization.equals("admin")) {
+            log.debug("REST request to delete Seat : {}", id);
+            seatService.delete(id);
+        } else throw new BadRequestException("Authorization header is invalid.");
     }
 }
