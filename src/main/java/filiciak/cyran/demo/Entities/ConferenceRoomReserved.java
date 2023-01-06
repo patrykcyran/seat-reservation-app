@@ -1,6 +1,6 @@
 package filiciak.cyran.demo.Entities;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
