@@ -38,6 +38,23 @@ public class ConferenceRoomController {
         } else throw new BadRequestException("Authorization header is invalid.");
     }
 
+    @PutMapping("/addEq/{conferenceRoomId}/{equipmentId}")
+    public ResponseEntity<ConferenceRoom> addEquipment(@PathVariable Integer conferenceRoomId, @PathVariable Integer equipmentId, @RequestHeader String authorization) throws BadRequestException{
+        if (authorization.equals("admin")) {
+            log.debug("REST request to add equipment to Conference Room");
+            ConferenceRoom ConfRoomWithAddedEq = conferenceRoomService.addEquipmentById(conferenceRoomId, equipmentId);
+            return new ResponseEntity<>(ConfRoomWithAddedEq, HttpStatus.OK);
+        } else throw new BadRequestException("Authorization header is invalid.");
+    }
+    @PutMapping("/deleteEq/{conferenceRoomId}/{equipmentId}")
+    public ResponseEntity<ConferenceRoom> deleteEquipment(@PathVariable Integer conferenceRoomId, @PathVariable Integer equipmentId, @RequestHeader String authorization) throws BadRequestException{
+        if (authorization.equals("admin")) {
+            log.debug("REST request to delete equipment of Conference Room");
+            ConferenceRoom ConfRoomWithDeletedEq = conferenceRoomService.deleteEquipmentById(conferenceRoomId, equipmentId);
+            return new ResponseEntity<>(ConfRoomWithDeletedEq, HttpStatus.OK);
+        } else throw new BadRequestException("Authorization header is invalid.");
+    }
+
     @GetMapping("/allFromOffice/{officeId}")
     public List<ConferenceRoom> allFromOffice(@PathVariable Integer officeId) {
         log.debug("REST request to get all of Rooms from the office");

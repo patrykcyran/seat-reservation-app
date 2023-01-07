@@ -1,10 +1,10 @@
 package filiciak.cyran.demo.Services;
 
+import filiciak.cyran.demo.Entities.ConferenceRoom;
 import filiciak.cyran.demo.Entities.Equipment;
 import filiciak.cyran.demo.Entities.Seat;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
 import filiciak.cyran.demo.Repositories.EquipmentRepository;
-import filiciak.cyran.demo.Repositories.SeatRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +20,15 @@ public class EquipmentService {
     private final EquipmentRepository equipmentRepository;
 
     private final SeatService seatService;
+    private final ConferenceRoomService conferenceRoomService;
 
     private boolean doesContain = false;
 
     @Autowired
-    public EquipmentService(EquipmentRepository equipmentRepository,@Lazy SeatService seatService) {
+    public EquipmentService(EquipmentRepository equipmentRepository, @Lazy SeatService seatService, @Lazy ConferenceRoomService conferenceRoomService) {
         this.equipmentRepository = equipmentRepository;
         this.seatService = seatService;
+        this.conferenceRoomService = conferenceRoomService;
     }
 
 
@@ -64,11 +66,19 @@ public class EquipmentService {
         }
         Equipment eq = equipmentRepository.findById(id).get();
         List<Seat> seats = seatService.findAll();
+        List<ConferenceRoom> conferenceRooms = conferenceRoomService.findAll();
 
         for (Seat seat : seats) {
             doesContain = seat.getEquipments().contains(eq);
             if(doesContain){
                 seatService.deleteEquipment(seat, eq);
+                doesContain = false;
+            }
+        }
+        for (ConferenceRoom conferenceRoom : conferenceRooms){
+            doesContain = conferenceRoom.getEquipments().contains(eq);
+            if(doesContain){
+                conferenceRoomService.deleteEquipment(conferenceRoom, eq);
                 doesContain = false;
             }
         }
