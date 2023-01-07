@@ -21,7 +21,7 @@ public class ConferenceRoomController {
     public ConferenceRoomController(ConferenceRoomService conferenceRoomService) {this.conferenceRoomService = conferenceRoomService;}
 
     @PostMapping
-    public ResponseEntity<ConferenceRoom> createSeat(@RequestBody ConferenceRoom conferenceRoom, @RequestHeader String authorization) throws BadRequestException {
+    public ResponseEntity<ConferenceRoom> createRoom(@RequestBody ConferenceRoom conferenceRoom, @RequestHeader String authorization) throws BadRequestException {
         if (authorization.equals("admin")) {
             log.debug("REST request to save Room : {}", conferenceRoom);
             ConferenceRoom createdConferenceRoom = conferenceRoomService.save(conferenceRoom);
@@ -30,7 +30,7 @@ public class ConferenceRoomController {
     }
 
     @PutMapping()
-    public ResponseEntity<ConferenceRoom> updateSeat(@RequestBody ConferenceRoom conferenceRoom, @RequestHeader String authorization) throws BadRequestException {
+    public ResponseEntity<ConferenceRoom> updateRoom(@RequestBody ConferenceRoom conferenceRoom, @RequestHeader String authorization) throws BadRequestException {
         if (authorization.equals("admin")) {
             log.debug("REST request to update Room : {}", conferenceRoom);
             ConferenceRoom updatedConferenceRoom = conferenceRoomService.update(conferenceRoom);
@@ -51,13 +51,13 @@ public class ConferenceRoomController {
     }
 
     @GetMapping("/{id}")
-    public ConferenceRoom getSeat(@PathVariable Integer id) {
+    public ConferenceRoom getRoom(@PathVariable Integer id) {
         log.debug("REST request to get Room : {}", id);
         return conferenceRoomService.findById(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteSeat(@PathVariable Integer id, @RequestHeader String authorization) throws BadRequestException {
+    public void deleteRoom(@PathVariable Integer id, @RequestHeader String authorization) throws BadRequestException {
         if (authorization.equals("admin")) {
             log.debug("REST request to delete Room : {}", id);
             conferenceRoomService.delete(id);
