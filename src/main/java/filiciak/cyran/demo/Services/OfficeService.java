@@ -44,9 +44,11 @@ public class OfficeService {
         log.debug("Request to get all Office");
         return officeRepository.findAll();
     }
-    public Office findById(Integer id) {
+    public Office findById(Integer id) throws BadRequestException {
+        if(!officeRepository.existsById(id)){
+            throw new BadRequestException("Office with id " + id + "  does not exist");
+        }
         log.debug("Request to get Office : {}", id);
-
         return officeRepository.findById(id).get();
     }
     public void delete(Integer id) throws BadRequestException {

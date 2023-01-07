@@ -50,7 +50,7 @@ public class OfficeController {
     }
 
     @GetMapping("/{id}")
-    public Office getOffice(@PathVariable Integer id) {
+    public Office getOffice(@PathVariable Integer id) throws BadRequestException {
         log.debug("REST request to get Office : {}", id);
         return officeService.findById(id);
     }

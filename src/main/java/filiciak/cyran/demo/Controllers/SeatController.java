@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +47,22 @@ public class SeatController {
         } else throw new BadRequestException("Authorization header is invalid.");
     }
 
+    @PutMapping("/addEq/{seatId}/{equipmentId}")
+    public ResponseEntity<Seat> addEquipment(@PathVariable Integer seatId, @PathVariable Integer equipmentId, @RequestHeader String authorization) throws BadRequestException{
+        if (authorization.equals("admin")) {
+            log.debug("REST request to add equipment to seat");
+            Seat seatWithAddedEq = seatService.addEquipmentById(seatId, equipmentId);
+            return new ResponseEntity<>(seatWithAddedEq, HttpStatus.OK);
+        } else throw new BadRequestException("Authorization header is invalid.");
+    }
+    @PutMapping("/deleteEq/{seatId}/{equipmentId}")
+    public ResponseEntity<Seat> deleteEquipment(@PathVariable Integer seatId, @PathVariable Integer equipmentId, @RequestHeader String authorization) throws BadRequestException{
+        if (authorization.equals("admin")) {
+            log.debug("REST request to delete equipment of seat");
+            Seat seatWithDeletedEq = seatService.deleteEquipmentById(seatId, equipmentId);
+            return new ResponseEntity<>(seatWithDeletedEq, HttpStatus.OK);
+        } else throw new BadRequestException("Authorization header is invalid.");
+    }
     @GetMapping("/allFromOffice/{officeId}")
     public List<Seat> allFromOffice(@PathVariable Integer officeId) {
         log.debug("REST request to get all of Seats from the office");
@@ -59,10 +76,11 @@ public class SeatController {
     }
 
     @GetMapping("/{id}")
-    public Seat getSeat(@PathVariable Integer id) {
+    public Seat getSeat(@PathVariable Integer id) throws BadRequestException {
         log.debug("REST request to get Seat : {}", id);
         return seatService.findById(id);
     }
+
 
     @DeleteMapping("/{id}")
     public void deleteSeat(@PathVariable Integer id, @RequestHeader String authorization) throws BadRequestException {

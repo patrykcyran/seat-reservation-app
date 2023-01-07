@@ -50,7 +50,7 @@ public class AddressController {
     }
 
     @GetMapping("/{id}")
-    public Address getAddress(@PathVariable Integer id){
+    public Address getAddress(@PathVariable Integer id) throws BadRequestException {
         log.debug("REST request to get Address : {}", id);
         return addressService.findById(id);
     }

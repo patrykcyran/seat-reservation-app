@@ -47,7 +47,10 @@ public class AddressService {
         log.debug("Request to get all Addresses");
         return addressRepository.findAll();
     }
-    public Address findById(Integer id) {
+    public Address findById(Integer id) throws BadRequestException {
+        if(!addressRepository.existsById(id)){
+            throw new BadRequestException("Address with id " + id + "  does not exist");
+        }
         log.debug("Request to get Address : {}", id);
         return addressRepository.findById(id).get();
     }
