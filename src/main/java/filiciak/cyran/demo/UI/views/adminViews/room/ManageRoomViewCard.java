@@ -1,22 +1,31 @@
-package filiciak.cyran.demo.UI.views.makeRoomReservation;
+package filiciak.cyran.demo.UI.views.adminViews.room;
 
+import com.vaadin.flow.component.HasComponents;
+import com.vaadin.flow.component.HasStyle;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.ListItem;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.AfterNavigationEvent;
+import com.vaadin.flow.router.AfterNavigationObserver;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import filiciak.cyran.demo.Controllers.ConferenceRoomController;
 import filiciak.cyran.demo.Entities.AvailabilityStatus;
 import filiciak.cyran.demo.Entities.ConferenceRoom;
+import filiciak.cyran.demo.Entities.UserInstance;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
 
 import java.util.List;
 
-public class RoomViewCard extends ListItem {
+public class ManageRoomViewCard extends ListItem {
 
     ConferenceRoomController conferenceRoomController;
 
-    public RoomViewCard(ConferenceRoom conferenceRoom, ConferenceRoomController conferenceRoomController) throws BadRequestException {
+    public ManageRoomViewCard(ConferenceRoom conferenceRoom, ConferenceRoomController conferenceRoomController) throws BadRequestException {
         this.conferenceRoomController = conferenceRoomController;
         if (!conferenceRoom.getStatus().equals(AvailabilityStatus.FREE)) {
             return;
@@ -37,31 +46,20 @@ public class RoomViewCard extends ListItem {
 
         //TODO: Add equipment for room
 
-        Span equipment = new Span();
-        equipment.addClassNames(LumoUtility.FontSize.XLARGE, LumoUtility.FontWeight.SEMIBOLD);
-        List<String> equipmentList = conferenceRoomController.getEquipment(conferenceRoom.getId());
-        StringBuilder stringBuilder = new StringBuilder("Equipment: \n");
-        equipmentList.forEach(s -> stringBuilder.append(s).append("\n"));
-        equipment.setText("\n" + stringBuilder);
-
         Button button = new Button();
         button.addClassNames(LumoUtility.AlignItems.END);
-        button.setText("Reserve");
+        button.setText("Manage");
 
         Div div2 = new Div();
-        div2.setHeight("20px");
-        div2.setWidth("10px");
+        div.setHeight("20px");
+        div.setWidth("10px");
 
         Div div3 = new Div();
-        div3.setHeight("20px");
-        div3.setWidth("10px");
+        div.setHeight("20px");
+        div.setWidth("10px");
 
-        button.addClickListener(e -> reserveRoom(conferenceRoom));
+        button.addClickListener(e -> UI.getCurrent().navigate(ChangeSingleRoomView.class));
 
-        add(div, header, div2, equipment, div3, button);
-    }
-
-    private void reserveRoom(ConferenceRoom conferenceRoom) {
-
+        add(div, header, div2, button);
     }
 }

@@ -80,4 +80,11 @@ public class ConferenceRoomController {
             conferenceRoomService.delete(id);
         } else throw new BadRequestException("Authorization header is invalid.");
     }
+
+
+    @GetMapping("/eq/{id}")
+    public List<String> getEquipment(@PathVariable Integer id) throws BadRequestException {
+        log.debug("REST request to get equipment for Room : {}", id);
+        return conferenceRoomService.findEquipmentByRoomId(id);
+    }
 }

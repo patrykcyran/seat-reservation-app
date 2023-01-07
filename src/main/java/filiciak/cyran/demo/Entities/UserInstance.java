@@ -12,6 +12,7 @@ public class UserInstance {
     private Integer id;
     String username;
     boolean isLogged;
+    boolean isAdmin;
 
     public static UserInstance getInstance() {
         if (INSTANCE == null) {
@@ -25,6 +26,7 @@ public class UserInstance {
         if (!INSTANCE.isLogged) {
             INSTANCE.setUsername(username);
             INSTANCE.setLogged(true);
+            INSTANCE.setAdmin(false);
         }
     }
 }

@@ -1,4 +1,4 @@
-package filiciak.cyran.demo.UI.views.makeRoomReservation;
+package filiciak.cyran.demo.UI.views.adminViews.seat;
 
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
@@ -16,31 +16,33 @@ import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import filiciak.cyran.demo.Controllers.ConferenceRoomController;
-import filiciak.cyran.demo.Controllers.OfficeController;
+import filiciak.cyran.demo.Controllers.SeatController;
 import filiciak.cyran.demo.Entities.Office;
-import filiciak.cyran.demo.Entities.User;
+import filiciak.cyran.demo.Entities.Seat;
 import filiciak.cyran.demo.Entities.UserInstance;
+import filiciak.cyran.demo.Exceptions.BadRequestException;
 import filiciak.cyran.demo.UI.views.MainLayout;
 import filiciak.cyran.demo.UI.views.login.LoginView;
 
-@PageTitle("Make Room Reservation")
-@Route(value = "make-room-reservation", layout = MainLayout.class)
-public class MakeRoomReservationView extends Div implements AfterNavigationObserver, HasComponents, HasStyle {
+@PageTitle("Manage Seats")
+@Route(value = "manage-seat-view", layout = MainLayout.class)
+public class ManageSeatView extends Div implements AfterNavigationObserver, HasComponents, HasStyle {
+    Grid<Seat> grid = new Grid<>();
+    SeatController seatController;
+    private OrderedList seatsContainer;
 
-
-    Grid<Office> grid = new Grid<>();
-    OfficeController officeController;
-    ConferenceRoomController conferenceRoomController;
-    private OrderedList officeContainer;
-
-    public MakeRoomReservationView(OfficeController officeController, ConferenceRoomController conferenceRoomController) {
-        this.officeController = officeController;
-        this.conferenceRoomController = conferenceRoomController;
+    public ManageSeatView(SeatController seatController) {
+        this.seatController = seatController;
 
         constructUI();
 
-        officeController.all().forEach(office -> officeContainer.add(new OfficeWithRoomsViewCard(office, conferenceRoomController)));
+        seatController.all().forEach(seat -> {
+            try {
+                seatsContainer.add(new ManageSeatViewCard(seat, seatController));
+            } catch (BadRequestException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private void constructUI() {
@@ -57,24 +59,20 @@ public class MakeRoomReservationView extends Div implements AfterNavigationObser
         description.addClassNames(LumoUtility.Margin.Bottom.XLARGE, LumoUtility.Margin.Top.NONE, LumoUtility.TextColor.SECONDARY);
         headerContainer.add(header, description);
 
-        Select<String> sortBy = new Select<>();
-        sortBy.setLabel("Sort by");
-        sortBy.setItems("Name", "Localization");
-        sortBy.setValue("Name");
 
-        officeContainer = new OrderedList();
-        officeContainer.addClassNames(LumoUtility.Gap.MEDIUM, LumoUtility.Display.GRID, LumoUtility.ListStyleType.NONE, LumoUtility.Margin.LARGE, LumoUtility.Padding.NONE);
+        seatsContainer = new OrderedList();
+        seatsContainer.addClassNames(LumoUtility.Gap.MEDIUM, LumoUtility.Display.GRID, LumoUtility.ListStyleType.NONE, LumoUtility.Margin.LARGE, LumoUtility.Padding.NONE);
 
-        container.add(headerContainer, sortBy);
-        add(container, officeContainer);
+        container.add(headerContainer);
+        add(container, seatsContainer);
     }
 
     @Override
     public void afterNavigation(AfterNavigationEvent event) {
-        if (!UserInstance.getInstance().isLogged()) {
+        if (!UserInstance.getInstance().isLogged() && !UserInstance.getInstance().isAdmin()) {
             UI.getCurrent().navigate(LoginView.class);
         }
 
-        grid.setItems(officeController.all());
+        grid.setItems(seatController.all());
     }
 }

@@ -10,6 +10,7 @@ import filiciak.cyran.demo.Controllers.ConferenceRoomController;
 import filiciak.cyran.demo.Entities.AvailabilityStatus;
 import filiciak.cyran.demo.Entities.ConferenceRoom;
 import filiciak.cyran.demo.Entities.Office;
+import filiciak.cyran.demo.Exceptions.BadRequestException;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class OfficeWithRoomsViewCard extends ListItem {
 
     OrderedList roomsContainer;
     ConferenceRoomController conferenceRoomController;
+    boolean isShowed = false;
 
     public OfficeWithRoomsViewCard(Office office, ConferenceRoomController conferenceRoomController) {
         this.conferenceRoomController = conferenceRoomController;
@@ -56,15 +58,32 @@ public class OfficeWithRoomsViewCard extends ListItem {
         div.setHeight("20px");
         div.setWidth("10px");
 
-        button.addClickListener(e -> showSeats(office));
+        button.addClickListener(e -> {
+            if (isShowed) {
+                hideRooms();
+            } else {
+                showRooms(office);
+            }
+        });
 
         add(div, header, div2, address, div3, button, div4, roomsContainer);
     }
 
-    private void showSeats(Office office) {
-        List<ConferenceRoom> rooms = conferenceRoomController.allFromOffice(office.getId());
+    private void showRooms(Office office) {
         conferenceRoomController.allFromOffice(office.getId()).stream()
-                .filter(seat -> seat.getStatus().equals(AvailabilityStatus.FREE))
-                .forEach(room -> roomsContainer.add(new RoomViewCard(room)));
+                .filter(room -> room.getStatus().equals(AvailabilityStatus.FREE))
+                .forEach(room -> {
+                    try {
+                        roomsContainer.add(new RoomViewCard(room, conferenceRoomController));
+                    } catch (BadRequestException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+        isShowed = true;
+    }
+
+    private void hideRooms() {
+        roomsContainer.removeAll();
+        isShowed = false;
     }
 }

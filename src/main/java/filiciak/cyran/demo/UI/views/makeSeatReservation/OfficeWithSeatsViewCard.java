@@ -7,6 +7,7 @@ import filiciak.cyran.demo.Controllers.SeatController;
 import filiciak.cyran.demo.Entities.AvailabilityStatus;
 import filiciak.cyran.demo.Entities.Office;
 import filiciak.cyran.demo.Entities.Seat;
+import filiciak.cyran.demo.Exceptions.BadRequestException;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class OfficeWithSeatsViewCard extends ListItem {
 
     OrderedList seatsContainer;
     SeatController seatController;
+    boolean isShowed = false;
 
     public OfficeWithSeatsViewCard(Office office, SeatController seatController) {
         this.seatController = seatController;
@@ -53,15 +55,32 @@ public class OfficeWithSeatsViewCard extends ListItem {
         div.setHeight("20px");
         div.setWidth("10px");
 
-        button.addClickListener(e -> showSeats(office));
+        button.addClickListener(e -> {
+            if (isShowed) {
+                hideSeats();
+            } else {
+                showSeats(office);
+            }
+        });
 
         add(div, header, div2, address, div3, button, div4, seatsContainer);
     }
 
     private void showSeats(Office office) {
-        List<Seat> seats = seatController.allFromOffice(office.getId());
         seatController.allFromOffice(office.getId()).stream()
                 .filter(seat -> seat.getStatus().equals(AvailabilityStatus.FREE))
-                .forEach(seat -> seatsContainer.add(new SeatViewCard(seat)));
+                .forEach(seat -> {
+                    try {
+                        seatsContainer.add(new SeatViewCard(seat, seatController));
+                    } catch (BadRequestException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+        isShowed = true;
+    }
+
+    private void hideSeats() {
+        seatsContainer.removeAll();
+        isShowed = false;
     }
 }

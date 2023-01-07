@@ -5,12 +5,20 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.ListItem;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import filiciak.cyran.demo.Controllers.SeatController;
 import filiciak.cyran.demo.Entities.AvailabilityStatus;
+import filiciak.cyran.demo.Entities.Equipment;
 import filiciak.cyran.demo.Entities.Seat;
+import filiciak.cyran.demo.Exceptions.BadRequestException;
+
+import java.util.List;
 
 public class SeatViewCard extends ListItem {
 
-    public SeatViewCard(Seat seat) {
+    SeatController seatController;
+
+    public SeatViewCard(Seat seat, SeatController seatController) throws BadRequestException {
+        this.seatController = seatController;
         if (!seat.getStatus().equals(AvailabilityStatus.FREE)) {
             return;
         }
@@ -30,21 +38,28 @@ public class SeatViewCard extends ListItem {
 
         //TODO: Add equipment for seat
 
+        Span equipment = new Span();
+        equipment.addClassNames(LumoUtility.FontSize.XLARGE, LumoUtility.FontWeight.SEMIBOLD);
+        List<String> equipmentList = seatController.getEquipment(seat.getId());
+        StringBuilder stringBuilder = new StringBuilder("Equipment: \n");
+        equipmentList.forEach(s -> stringBuilder.append(s).append("\n"));
+        equipment.setText("\n" + stringBuilder);
+
         Button button = new Button();
         button.addClassNames(LumoUtility.AlignItems.END);
         button.setText("Reserve");
 
         Div div2 = new Div();
-        div.setHeight("20px");
-        div.setWidth("10px");
+        div2.setHeight("20px");
+        div2.setWidth("10px");
 
         Div div3 = new Div();
-        div.setHeight("20px");
-        div.setWidth("10px");
+        div3.setHeight("20px");
+        div3.setWidth("10px");
 
         button.addClickListener(e -> reserveSeat(seat));
 
-        add(div, header, div2, button);
+        add(div, header, div2, equipment, div3, button);
     }
 
     private void reserveSeat(Seat seat) {

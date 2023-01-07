@@ -40,13 +40,6 @@ public class MakeSeatReservationView extends Div implements AfterNavigationObser
         constructUI();
 
         officeController.all().forEach(office -> officeContainer.add(new OfficeWithSeatsViewCard(office, seatController)));
-
-/*        addClassName("make-reservation-view");
-        setSizeFull();
-        grid.setHeight("100%");
-        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_NO_ROW_BORDERS);
-        grid.addComponentColumn(office -> createCard(office));
-        add(grid);*/
     }
 
     private void constructUI() {

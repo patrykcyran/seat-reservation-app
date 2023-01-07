@@ -24,7 +24,7 @@ public class UserService {
         if(user.getId() != null){
             throw new BadRequestException("A new user cannot already have an ID");
         }
-        if((userRepository.findByUsername(user.getUsername()).isEmpty())){
+        if(userRepository.findByUsername(user.getUsername()).isPresent()){
             throw new BadRequestException("User with this username exist in this office");
         }
         log.debug("Request to save user : {} ", user);

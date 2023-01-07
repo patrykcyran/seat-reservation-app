@@ -123,5 +123,12 @@ public class SeatService {
         seatRepository.deleteById(id);
     }
 
+    public List<String> findEquipmentBySeatId(Integer id) throws BadRequestException{
+        if(!seatRepository.existsById(id)) {
+            throw new BadRequestException("Seat with id " + id + "  does not exist");
+        }
+        log.debug("Request to get equipment for Seat : {} ", id);
 
+        return seatRepository.findEquipmentBySeatId(id);
+    }
 }

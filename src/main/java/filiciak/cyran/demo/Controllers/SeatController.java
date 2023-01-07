@@ -1,5 +1,6 @@
 package filiciak.cyran.demo.Controllers;
 
+import filiciak.cyran.demo.Entities.Equipment;
 import filiciak.cyran.demo.Entities.Office;
 import filiciak.cyran.demo.Entities.Seat;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
@@ -88,5 +89,11 @@ public class SeatController {
             log.debug("REST request to delete Seat : {}", id);
             seatService.delete(id);
         } else throw new BadRequestException("Authorization header is invalid.");
+    }
+
+    @GetMapping("/eq/{id}")
+    public List<String> getEquipment(@PathVariable Integer id) throws BadRequestException {
+        log.debug("REST request to get equipment for Seat : {}", id);
+        return seatService.findEquipmentBySeatId(id);
     }
 }

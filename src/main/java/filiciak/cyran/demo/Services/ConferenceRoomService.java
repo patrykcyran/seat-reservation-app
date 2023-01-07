@@ -115,4 +115,13 @@ public class ConferenceRoomService {
         log.debug("Request to delete Room : {} ", id);
         conferenceRoomRepository.deleteById(id);
     }
+
+    public List<String> findEquipmentByRoomId(Integer id) throws BadRequestException{
+        if(!conferenceRoomRepository.existsById(id)) {
+            throw new BadRequestException("Room with id " + id + "  does not exist");
+        }
+        log.debug("Request to get equipment for Room : {} ", id);
+
+        return conferenceRoomRepository.findEquipmentByRoomId(id);
+    }
 }
