@@ -16,6 +16,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import filiciak.cyran.demo.Entities.User;
+import filiciak.cyran.demo.Entities.UserInstance;
 import filiciak.cyran.demo.UI.views.MainLayout;
 import filiciak.cyran.demo.UI.views.login.LoginView;
 
@@ -41,7 +42,7 @@ public class YourReservationsView extends Div implements AfterNavigationObserver
 
     @Override
     public void afterNavigation(AfterNavigationEvent event) {
-        if (!User.getInstance().isLogged()) {
+        if (!UserInstance.getInstance().isLogged()) {
             UI.getCurrent().navigate(LoginView.class);
         }
         grid.setItems(List.of());

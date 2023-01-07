@@ -31,4 +31,8 @@ public class ConferenceRoomReserved {
     @ManyToOne
     @JoinColumn(name = "conferenceRoom_id")
     private ConferenceRoom conferenceRoom;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

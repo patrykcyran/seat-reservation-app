@@ -10,12 +10,15 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import filiciak.cyran.demo.Controllers.UserController;
 import filiciak.cyran.demo.Entities.User;
+import filiciak.cyran.demo.Entities.UserInstance;
+import filiciak.cyran.demo.Exceptions.BadRequestException;
 import filiciak.cyran.demo.UI.views.yourReservations.YourReservationsView;
 
 @PageTitle("Login")
@@ -23,35 +26,45 @@ import filiciak.cyran.demo.UI.views.yourReservations.YourReservationsView;
 @Uses(Icon.class)
 public class LoginView extends Div {
 
-    private TextField firstNameTextField = new TextField("First name");
-    private TextField lastNameTextField = new TextField("Last name");
+    private TextField usernameTextField = new TextField("username");
     private Button loginButton = new Button("Login");
+    UserController userController;
 
-    public LoginView() {
+    public LoginView(UserController userController) {
+        this.userController = userController;
         addClassName("person-form-view");
 
         add(createTitle());
         add(createFormLayout());
         add(createButtonLayout());
-        firstNameTextField.setValue("Patryk");
-        lastNameTextField.setValue("Cyran");
+
+        usernameTextField.setValue("Patryk");
 
         loginButton.addClickListener(e -> {
-            String firstName;
-            String lastName;
-            firstName = firstNameTextField.getValue();
-            lastName = lastNameTextField.getValue();
-            if (validateLoginInput(firstName, lastName)) {
-                User.setUser(firstName, lastName);
+            String username;
+            username = usernameTextField.getValue();
+            if (validateLoginInput(username)) {
+                try {
+                    loginUser(username);
+                } catch (BadRequestException ex) {
+                    throw new RuntimeException(ex);
+                }
                 UI.getCurrent().navigate(YourReservationsView.class);
             } else {
-                Notification.show("Both fields must be populated to log in", 5000, Notification.Position.MIDDLE);
+                Notification.show("You must provide username to log in", 5000, Notification.Position.MIDDLE);
             }
         });
     }
 
-    private boolean validateLoginInput(String firstName, String lastName) {
-        return !firstName.isBlank() && !lastName.isBlank();
+    private boolean validateLoginInput(String username) {
+        return !username.isBlank();
+    }
+
+    private void loginUser(String username) throws BadRequestException {
+        UserInstance.setUser(username);
+        if (!userController.userExists(username)) {
+            userController.createUser(new User(username), "admin");
+        }
     }
 
     private Component createTitle() {
@@ -60,7 +73,7 @@ public class LoginView extends Div {
 
     private Component createFormLayout() {
         FormLayout formLayout = new FormLayout();
-        formLayout.add(firstNameTextField, lastNameTextField);
+        formLayout.add(usernameTextField);
         return formLayout;
     }
 

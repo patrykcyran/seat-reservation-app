@@ -1,30 +1,25 @@
 package filiciak.cyran.demo.Entities;
 
+import filiciak.cyran.demo.Controllers.UserController;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+
 @NoArgsConstructor
 @Data
+@Entity
+@Table
 public class User {
-    private static User INSTANCE = new User();
-    String firstName;
-    String lastName;
-    boolean isLogged;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true, nullable = false)
+    private Integer id;
 
-    public static User getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new User();
-        }
+    @Column(nullable = false, unique = true)
+    String username;
 
-        return INSTANCE;
+    public User(String username) {
+        this.username = username;
     }
-
-    public static void setUser(String firstName, String lastName) {
-        if (!INSTANCE.isLogged) {
-            INSTANCE.setFirstName(firstName);
-            INSTANCE.setLastName(lastName);
-            INSTANCE.setLogged(true);
-        }
-    }
-
 }
