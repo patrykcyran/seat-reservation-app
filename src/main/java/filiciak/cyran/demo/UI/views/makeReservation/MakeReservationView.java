@@ -18,6 +18,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.*;
 import filiciak.cyran.demo.Controllers.OfficeController;
+import filiciak.cyran.demo.Controllers.SeatController;
 import filiciak.cyran.demo.Entities.Office;
 import filiciak.cyran.demo.Entities.User;
 import filiciak.cyran.demo.UI.views.MainLayout;
@@ -31,14 +32,16 @@ public class MakeReservationView extends Div implements AfterNavigationObserver,
 
     Grid<Office> grid = new Grid<>();
     OfficeController officeController;
+    SeatController seatController;
     private OrderedList officeContainer;
 
-    public MakeReservationView(OfficeController officeController) {
+    public MakeReservationView(OfficeController officeController, SeatController seatController) {
         this.officeController = officeController;
+        this.seatController = seatController;
 
         constructUI();
 
-        officeController.all().forEach(office -> officeContainer.add(new OfficeViewCard(office)));
+        officeController.all().forEach(office -> officeContainer.add(new OfficeViewCard(office, seatController)));
 
 /*        addClassName("make-reservation-view");
         setSizeFull();
@@ -49,6 +52,7 @@ public class MakeReservationView extends Div implements AfterNavigationObserver,
     }
 
     private void constructUI() {
+        addClassNames("make-reservation-view");
         addClassNames(MaxWidth.SCREEN_LARGE, Margin.Horizontal.AUTO, Padding.Bottom.LARGE, Padding.Horizontal.LARGE);
 
         HorizontalLayout container = new HorizontalLayout();
@@ -67,7 +71,7 @@ public class MakeReservationView extends Div implements AfterNavigationObserver,
         sortBy.setValue("Name");
 
         officeContainer = new OrderedList();
-        officeContainer.addClassNames(Gap.MEDIUM, Display.GRID, ListStyleType.NONE, Margin.NONE, Padding.NONE);
+        officeContainer.addClassNames(Gap.MEDIUM, Display.GRID, ListStyleType.NONE, Margin.LARGE, Padding.NONE);
 
         container.add(headerContainer, sortBy);
         add(container, officeContainer);
