@@ -3,12 +3,15 @@ package filiciak.cyran.demo.Entities;
 import javax.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @Entity
 @Table
-public class ConferenceRoom {
+public class ConferenceRoom implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +27,7 @@ public class ConferenceRoom {
 
     @OneToMany
     private List<Equipment> equipments;
+
+    @Column(nullable = false)
+    private Integer officeId;
 }
