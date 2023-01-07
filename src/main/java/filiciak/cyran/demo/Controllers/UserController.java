@@ -2,6 +2,7 @@ package filiciak.cyran.demo.Controllers;
 
 import filiciak.cyran.demo.Entities.Seat;
 import filiciak.cyran.demo.Entities.User;
+import filiciak.cyran.demo.Entities.UserInstance;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
 import filiciak.cyran.demo.Services.UserService;
 import org.slf4j.Logger;
@@ -16,7 +17,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
-    private final Logger log = LoggerFactory.getLogger(SeatController.class);
+    private final Logger log = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
 
@@ -49,7 +50,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getSeat(@PathVariable Integer id) {
+    public User getUser(@PathVariable Integer id) {
         log.debug("REST request to get User : {}", id);
         return userService.findById(id);
     }
@@ -64,5 +65,16 @@ public class UserController {
     public boolean userExists(@PathVariable String username) {
         log.debug("REST request to check if user exists : {}", username);
         return userService.userExists(username);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Integer id, @RequestHeader String authorization) throws BadRequestException {
+        if (authorization.equals("admin")) {
+            log.debug("REST request to delete User : {}", id);
+            userService.delete(id);
+            if (id == UserInstance.getInstance().getId()) {
+                UserInstance.getInstance().setLogged(false);
+            }
+        } else throw new BadRequestException("Authorization header is invalid.");
     }
 }

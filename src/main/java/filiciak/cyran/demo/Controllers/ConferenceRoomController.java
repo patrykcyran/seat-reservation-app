@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/rooms")
 public class ConferenceRoomController {
-    private final Logger log = LoggerFactory.getLogger(SeatController.class);
+    private final Logger log = LoggerFactory.getLogger(ConferenceRoomController.class);
     private final ConferenceRoomService conferenceRoomService;
 
     public ConferenceRoomController(ConferenceRoomService conferenceRoomService) {this.conferenceRoomService = conferenceRoomService;}

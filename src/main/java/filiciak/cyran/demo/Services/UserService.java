@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    private final Logger log = LoggerFactory.getLogger(SeatService.class);
+    private final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
