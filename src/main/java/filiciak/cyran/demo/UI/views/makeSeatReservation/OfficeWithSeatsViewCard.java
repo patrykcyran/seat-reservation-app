@@ -1,4 +1,4 @@
-package filiciak.cyran.demo.UI.views.makeReservation;
+package filiciak.cyran.demo.UI.views.makeSeatReservation;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.*;
@@ -10,12 +10,12 @@ import filiciak.cyran.demo.Entities.Seat;
 
 import java.util.List;
 
-public class OfficeViewCard extends ListItem {
+public class OfficeWithSeatsViewCard extends ListItem {
 
     OrderedList seatsContainer;
     SeatController seatController;
 
-    public OfficeViewCard(Office office, SeatController seatController) {
+    public OfficeWithSeatsViewCard(Office office, SeatController seatController) {
         this.seatController = seatController;
         seatsContainer = new OrderedList();
         seatsContainer.addClassNames(Gap.MEDIUM, Display.GRID, ListStyleType.NONE, Margin.LARGE, Padding.NONE);
@@ -61,7 +61,7 @@ public class OfficeViewCard extends ListItem {
     private void showSeats(Office office) {
         List<Seat> seats = seatController.allFromOffice(office.getId());
         seatController.allFromOffice(office.getId()).stream()
-                //.filter(seat -> seat.getStatus().equals(AvailabilityStatus.FREE))
+                .filter(seat -> seat.getStatus().equals(AvailabilityStatus.FREE))
                 .forEach(seat -> seatsContainer.add(new SeatViewCard(seat)));
     }
 }

@@ -1,11 +1,10 @@
-package filiciak.cyran.demo.UI.views.makeReservation;
+package filiciak.cyran.demo.UI.views.makeSeatReservation;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.ListItem;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import filiciak.cyran.demo.Controllers.SeatController;
 import filiciak.cyran.demo.Entities.AvailabilityStatus;
 import filiciak.cyran.demo.Entities.Seat;
 

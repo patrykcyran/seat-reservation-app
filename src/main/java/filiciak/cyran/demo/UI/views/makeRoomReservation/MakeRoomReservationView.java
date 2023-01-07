@@ -1,10 +1,9 @@
-package filiciak.cyran.demo.UI.views.makeReservation;
+package filiciak.cyran.demo.UI.views.makeRoomReservation;
 
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.OrderedList;
@@ -16,32 +15,31 @@ import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.theme.lumo.LumoUtility.*;
+import com.vaadin.flow.theme.lumo.LumoUtility;
+import filiciak.cyran.demo.Controllers.ConferenceRoomController;
 import filiciak.cyran.demo.Controllers.OfficeController;
-import filiciak.cyran.demo.Controllers.SeatController;
 import filiciak.cyran.demo.Entities.Office;
 import filiciak.cyran.demo.Entities.User;
 import filiciak.cyran.demo.UI.views.MainLayout;
 import filiciak.cyran.demo.UI.views.login.LoginView;
 
-import java.util.List;
+@PageTitle("Make Room Reservation")
+@Route(value = "make-room-reservation", layout = MainLayout.class)
+public class MakeRoomReservationView extends Div implements AfterNavigationObserver, HasComponents, HasStyle {
 
-@PageTitle("Make Reservation")
-@Route(value = "make-reservation", layout = MainLayout.class)
-public class MakeReservationView extends Div implements AfterNavigationObserver, HasComponents, HasStyle {
 
     Grid<Office> grid = new Grid<>();
     OfficeController officeController;
-    SeatController seatController;
+    ConferenceRoomController conferenceRoomController;
     private OrderedList officeContainer;
 
-    public MakeReservationView(OfficeController officeController, SeatController seatController) {
+    public MakeRoomReservationView(OfficeController officeController, ConferenceRoomController conferenceRoomController) {
         this.officeController = officeController;
-        this.seatController = seatController;
+        this.conferenceRoomController = conferenceRoomController;
 
         constructUI();
 
-        officeController.all().forEach(office -> officeContainer.add(new OfficeViewCard(office, seatController)));
+        officeController.all().forEach(office -> officeContainer.add(new OfficeWithRoomsViewCard(office, conferenceRoomController)));
 
 /*        addClassName("make-reservation-view");
         setSizeFull();
@@ -52,17 +50,17 @@ public class MakeReservationView extends Div implements AfterNavigationObserver,
     }
 
     private void constructUI() {
-        addClassNames("make-reservation-view");
-        addClassNames(MaxWidth.SCREEN_LARGE, Margin.Horizontal.AUTO, Padding.Bottom.LARGE, Padding.Horizontal.LARGE);
+        addClassNames("make-room-reservation-view");
+        addClassNames(LumoUtility.MaxWidth.SCREEN_LARGE, LumoUtility.Margin.Horizontal.AUTO, LumoUtility.Padding.Bottom.LARGE, LumoUtility.Padding.Horizontal.LARGE);
 
         HorizontalLayout container = new HorizontalLayout();
-        container.addClassNames(AlignItems.CENTER, JustifyContent.BETWEEN);
+        container.addClassNames(LumoUtility.AlignItems.CENTER, LumoUtility.JustifyContent.BETWEEN);
 
         VerticalLayout headerContainer = new VerticalLayout();
         H2 header = new H2("Offices");
-        header.addClassNames(Margin.Bottom.NONE, Margin.Top.NONE, FontSize.XXXLARGE);
+        header.addClassNames(LumoUtility.Margin.Bottom.NONE, LumoUtility.Margin.Top.NONE, LumoUtility.FontSize.XXXLARGE);
         Paragraph description = new Paragraph("Choose office in which you want to make reservation");
-        description.addClassNames(Margin.Bottom.XLARGE, Margin.Top.NONE, TextColor.SECONDARY);
+        description.addClassNames(LumoUtility.Margin.Bottom.XLARGE, LumoUtility.Margin.Top.NONE, LumoUtility.TextColor.SECONDARY);
         headerContainer.add(header, description);
 
         Select<String> sortBy = new Select<>();
@@ -71,7 +69,7 @@ public class MakeReservationView extends Div implements AfterNavigationObserver,
         sortBy.setValue("Name");
 
         officeContainer = new OrderedList();
-        officeContainer.addClassNames(Gap.MEDIUM, Display.GRID, ListStyleType.NONE, Margin.LARGE, Padding.NONE);
+        officeContainer.addClassNames(LumoUtility.Gap.MEDIUM, LumoUtility.Display.GRID, LumoUtility.ListStyleType.NONE, LumoUtility.Margin.LARGE, LumoUtility.Padding.NONE);
 
         container.add(headerContainer, sortBy);
         add(container, officeContainer);
@@ -100,5 +98,4 @@ public class MakeReservationView extends Div implements AfterNavigationObserver,
 
         grid.setItems(officeController.all());
     }
-
 }

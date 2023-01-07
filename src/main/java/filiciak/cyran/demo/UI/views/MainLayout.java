@@ -14,7 +14,8 @@ import filiciak.cyran.demo.Entities.User;
 import filiciak.cyran.demo.UI.components.AppNav;
 import filiciak.cyran.demo.UI.components.AppNavItem;
 import filiciak.cyran.demo.UI.views.login.LoginView;
-import filiciak.cyran.demo.UI.views.makeReservation.MakeReservationView;
+import filiciak.cyran.demo.UI.views.makeRoomReservation.MakeRoomReservationView;
+import filiciak.cyran.demo.UI.views.makeSeatReservation.MakeSeatReservationView;
 import filiciak.cyran.demo.UI.views.yourReservations.YourReservationsView;
 
 public class MainLayout extends AppLayout {
@@ -51,7 +52,8 @@ public class MainLayout extends AppLayout {
         AppNav nav = new AppNav();
 
         nav.addItem(new AppNavItem("Your Reservations", YourReservationsView.class, "la la-list"));
-        nav.addItem(new AppNavItem("Make Reservation", MakeReservationView.class, "la la-laptop"));
+        nav.addItem(new AppNavItem("Make Seat Reservation", MakeSeatReservationView.class, "la la-laptop"));
+        nav.addItem(new AppNavItem("Make Room Reservation", MakeRoomReservationView.class, "la la-laptop"));
 
         return nav;
     }
