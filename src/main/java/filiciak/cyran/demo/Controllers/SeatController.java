@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/seats")
+@RequestMapping("/seat")
 public class SeatController {
 
     private final Logger log = LoggerFactory.getLogger(SeatController.class);

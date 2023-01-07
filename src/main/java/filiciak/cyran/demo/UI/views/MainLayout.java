@@ -11,6 +11,7 @@ import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import filiciak.cyran.demo.Entities.User;
+import filiciak.cyran.demo.Entities.UserInstance;
 import filiciak.cyran.demo.UI.components.AppNav;
 import filiciak.cyran.demo.UI.components.AppNavItem;
 import filiciak.cyran.demo.UI.views.login.LoginView;
@@ -68,7 +69,7 @@ public class MainLayout extends AppLayout {
     @Override
     protected void afterNavigation() {
         super.afterNavigation();
-        if (!User.getInstance().isLogged()) {
+        if (!UserInstance.getInstance().isLogged()) {
             UI.getCurrent().close();
             UI.getCurrent().navigate(LoginView.class);
         }

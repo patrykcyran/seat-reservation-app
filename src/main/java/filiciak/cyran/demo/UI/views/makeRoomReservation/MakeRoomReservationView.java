@@ -20,6 +20,7 @@ import filiciak.cyran.demo.Controllers.ConferenceRoomController;
 import filiciak.cyran.demo.Controllers.OfficeController;
 import filiciak.cyran.demo.Entities.Office;
 import filiciak.cyran.demo.Entities.User;
+import filiciak.cyran.demo.Entities.UserInstance;
 import filiciak.cyran.demo.UI.views.MainLayout;
 import filiciak.cyran.demo.UI.views.login.LoginView;
 
@@ -92,7 +93,7 @@ public class MakeRoomReservationView extends Div implements AfterNavigationObser
 
     @Override
     public void afterNavigation(AfterNavigationEvent event) {
-        if (!User.getInstance().isLogged()) {
+        if (!UserInstance.getInstance().isLogged()) {
             UI.getCurrent().navigate(LoginView.class);
         }
 

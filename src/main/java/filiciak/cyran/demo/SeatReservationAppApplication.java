@@ -4,6 +4,7 @@ import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
 import filiciak.cyran.demo.Entities.User;
+import filiciak.cyran.demo.Entities.UserInstance;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -14,7 +15,7 @@ public class SeatReservationAppApplication implements AppShellConfigurator {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SeatReservationAppApplication.class, args);
-		User.getInstance().setLogged(false);
+		UserInstance.getInstance().setLogged(false);
 	}
 
 }

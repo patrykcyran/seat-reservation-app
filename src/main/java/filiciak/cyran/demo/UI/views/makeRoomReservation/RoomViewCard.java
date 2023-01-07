@@ -26,9 +26,9 @@ public class RoomViewCard extends ListItem {
 
         Span header = new Span();
         header.addClassNames(LumoUtility.FontSize.XLARGE, LumoUtility.FontWeight.SEMIBOLD);
-        header.setText("Seat number: " + conferenceRoom.getName());
+        header.setText("Room name: " + conferenceRoom.getName());
 
-        //TODO: Add equipment for seat
+        //TODO: Add equipment for room
 
         Button button = new Button();
         button.addClassNames(LumoUtility.AlignItems.END);
