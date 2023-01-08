@@ -64,7 +64,7 @@ public class MakeSeatReservationView extends Div implements AfterNavigationObser
         officeContainer = new OrderedList();
         officeContainer.addClassNames(Gap.MEDIUM, Display.GRID, ListStyleType.NONE, Margin.LARGE, Padding.NONE);
 
-        container.add(headerContainer, sortBy);
+        container.add(headerContainer);
         add(container, officeContainer);
     }
 
