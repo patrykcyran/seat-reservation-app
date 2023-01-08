@@ -16,6 +16,7 @@ import filiciak.cyran.demo.Entities.User;
 import filiciak.cyran.demo.Entities.UserInstance;
 import filiciak.cyran.demo.UI.components.AppNav;
 import filiciak.cyran.demo.UI.components.AppNavItem;
+import filiciak.cyran.demo.UI.views.adminViews.office.ManageOfficeView;
 import filiciak.cyran.demo.UI.views.adminViews.room.ManageRoomView;
 import filiciak.cyran.demo.UI.views.adminViews.seat.ManageSeatView;
 import filiciak.cyran.demo.UI.views.login.LoginView;
@@ -73,6 +74,7 @@ public class MainLayout extends AppLayout {
         } else {
             nav.addItem(new AppNavItem("Manage Seats", ManageSeatView.class, "la la-list"));
             nav.addItem(new AppNavItem("Manage Rooms", ManageRoomView.class, "la la-list"));
+            nav.addItem(new AppNavItem("Manage Offices", ManageOfficeView.class, "la la-list"));
         }
         return nav;
     }
