@@ -68,7 +68,7 @@ public class OfficeService {
             throw new BadRequestException("Office does not exist");
         }
         if(!seatRepository.findSeatsByOfficeId(id).isEmpty()){
-            throw new BadRequestException("Office has children (first delete seats)");
+            seatRepository.deleteAll(seatRepository.findSeatsByOfficeId(id));
         }
         log.debug("Request to delete Office : {} ", id);
         officeRepository.deleteById(id);

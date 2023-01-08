@@ -81,6 +81,10 @@ public class SeatController {
         return seatService.findById(id);
     }
 
+    @GetMapping("/{name}")
+    public Seat getSeatByNumberAndOfficeId(@PathVariable Integer number, Integer officeId){
+        return seatService.findSeatBySeatNumberAndOfficeId(number, officeId);
+    }
 
     @DeleteMapping("/{id}")
     public void deleteSeat(@PathVariable Integer id, @RequestHeader String authorization) throws BadRequestException {

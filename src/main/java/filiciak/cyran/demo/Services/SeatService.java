@@ -53,6 +53,10 @@ public class SeatService {
         return seatRepository.save(seat);
     }
 
+    public Seat findSeatBySeatNumberAndOfficeId(Integer seatNumber, Integer officeId) {
+        return seatRepository.findSeatBySeatNumberAndOfficeId(seatNumber, officeId);
+    }
+
     public Seat addEquipmentById(Integer seatId, Integer equipmentId) throws BadRequestException {
         idValidation(seatId, equipmentId);
         Seat seat = seatRepository.getReferenceById(seatId);

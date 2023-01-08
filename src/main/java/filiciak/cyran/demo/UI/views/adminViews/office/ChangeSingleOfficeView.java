@@ -22,6 +22,10 @@ import filiciak.cyran.demo.Controllers.SeatController;
 import filiciak.cyran.demo.Entities.*;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
 import filiciak.cyran.demo.UI.views.MainLayout;
+import filiciak.cyran.demo.UI.views.adminViews.manageObjects.AddRoomsToOfficeView;
+import filiciak.cyran.demo.UI.views.adminViews.manageObjects.AddSeatsToOfficeView;
+import filiciak.cyran.demo.UI.views.adminViews.manageObjects.DeleteRoomsFromOfficeView;
+import filiciak.cyran.demo.UI.views.adminViews.manageObjects.DeleteSeatsFromOfficeView;
 import filiciak.cyran.demo.UI.views.adminViews.seat.ManageSeatView;
 import filiciak.cyran.demo.UI.views.login.LoginView;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +35,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-//TODO: make this class for office
 @PageTitle("Manage Single Office")
 @Route(value = "manage-single-office", layout = MainLayout.class)
 public class ChangeSingleOfficeView extends Div implements AfterNavigationObserver, HasComponents, HasStyle {
@@ -45,6 +48,10 @@ public class ChangeSingleOfficeView extends Div implements AfterNavigationObserv
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
     private Button delete = new Button("Delete");
+    private Button addSeats = new Button("Add Seats");
+    private Button deleteSeats = new Button("Delete Seats");
+    private Button addRooms = new Button("Add Rooms");
+    private Button deleteRooms = new Button("Delete Rooms");
 
     OfficeController officeController;
     AddressController addressController;
@@ -64,6 +71,7 @@ public class ChangeSingleOfficeView extends Div implements AfterNavigationObserv
         add(createTitle());
         add(createFormLayout());
         add(createButtonLayout());
+        add(createButtonLayout2());
 
 
         cancel.addClickListener(e -> UI.getCurrent().navigate(ManageOfficeView.class));
@@ -105,7 +113,23 @@ public class ChangeSingleOfficeView extends Div implements AfterNavigationObserv
             } catch (BadRequestException ex) {
                 throw new RuntimeException(ex);
             }
-            UI.getCurrent().navigate(ManageSeatView.class);
+            UI.getCurrent().navigate(ManageOfficeView.class);
+        });
+        addSeats.addClickListener(e -> {
+            ComponentUtil.setData(UI.getCurrent(), Office.class, office);
+            UI.getCurrent().navigate(AddSeatsToOfficeView.class);
+        });
+        deleteSeats.addClickListener(e -> {
+            ComponentUtil.setData(UI.getCurrent(), Office.class, office);
+            UI.getCurrent().navigate(DeleteSeatsFromOfficeView.class);
+        });
+        addRooms.addClickListener(e -> {
+            ComponentUtil.setData(UI.getCurrent(), Office.class, office);
+            UI.getCurrent().navigate(AddRoomsToOfficeView.class);
+        });
+        deleteRooms.addClickListener(e -> {
+            ComponentUtil.setData(UI.getCurrent(), Office.class, office);
+            UI.getCurrent().navigate(DeleteRoomsFromOfficeView.class);
         });
     }
 
@@ -148,6 +172,18 @@ public class ChangeSingleOfficeView extends Div implements AfterNavigationObserv
         buttonLayout.add(save);
         buttonLayout.add(cancel);
         buttonLayout.add(delete);
+        return buttonLayout;
+    }
+
+    private Component createButtonLayout2() {
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.addClassName("button2-layout");
+        addSeats.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        addRooms.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buttonLayout.add(addSeats);
+        buttonLayout.add(deleteSeats);
+        buttonLayout.add(addRooms);
+        buttonLayout.add(deleteRooms);
         return buttonLayout;
     }
 
