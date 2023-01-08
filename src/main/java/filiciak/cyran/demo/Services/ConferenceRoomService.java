@@ -69,6 +69,11 @@ public class ConferenceRoomService {
         return conferenceRoomRepository.findRoomsByOfficeId(officeId);
     }
 
+    public List<ConferenceRoom> findAllFreeByOffice(Integer officeId){
+        log.debug("Request to get all free Rooms from {} ", officeRepository.findById(officeId).get());
+        return conferenceRoomRepository.findFreeRoomsByOfficeId(officeId);
+    }
+
     public ConferenceRoom addEquipmentById(Integer conferenceRoomId, Integer equipmentId) throws BadRequestException {
         idValidation(conferenceRoomId, equipmentId);
         ConferenceRoom conferenceRoom = conferenceRoomRepository.getReferenceById(conferenceRoomId);

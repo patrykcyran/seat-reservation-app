@@ -55,6 +55,12 @@ public class OfficeController {
         return officeService.findById(id);
     }
 
+    @GetMapping("/{string}")
+    public Office getOfficeByName(@PathVariable String name) throws BadRequestException {
+        log.debug("REST request to get Office id by : {}", name);
+        return officeService.findOfficeByName(name);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteOffice(@PathVariable Integer id, @RequestHeader String authorization) throws BadRequestException {
         if (authorization.equals("admin")) {

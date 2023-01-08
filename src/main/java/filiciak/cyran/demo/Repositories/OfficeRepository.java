@@ -12,4 +12,7 @@ public interface OfficeRepository extends JpaRepository<Office, Integer> {
 
     @Query("select o from Office o where o.address.id = :address_id")
     Office getOfficeByAddressId(@Param("address_id") Integer addressId);
+
+    @Query("select o from Office o where o.name = :name")
+    Office findOfficeByName(@Param("name") String name);
 }

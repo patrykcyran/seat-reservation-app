@@ -51,6 +51,15 @@ public class OfficeService {
         log.debug("Request to get Office : {}", id);
         return officeRepository.findById(id).get();
     }
+
+    public Office findOfficeByName(String name) throws BadRequestException {
+        if(officeRepository.findAll().stream().noneMatch(o -> o.getName().equals(name))) {
+            throw new BadRequestException("Office with name " + name + "  does not exist");
+        }
+        log.debug("Request to get Office by name : {}", name);
+        return officeRepository.findOfficeByName(name);
+    }
+
     public void delete(Integer id) throws BadRequestException {
         if (id == null){
             throw new BadRequestException("Invalid ID");

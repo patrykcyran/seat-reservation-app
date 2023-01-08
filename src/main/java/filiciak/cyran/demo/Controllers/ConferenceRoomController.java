@@ -6,6 +6,7 @@ import filiciak.cyran.demo.Exceptions.BadRequestException;
 import filiciak.cyran.demo.Services.ConferenceRoomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +60,11 @@ public class ConferenceRoomController {
     public List<ConferenceRoom> allFromOffice(@PathVariable Integer officeId) {
         log.debug("REST request to get all of Rooms from the office");
         return conferenceRoomService.findAllByOffice(officeId);
+    }
+
+    public List<ConferenceRoom> allFreeFromOffice(@PathVariable Integer officeId) {
+        log.debug("REST request to get all free Rooms from the office");
+        return conferenceRoomService.findAllFreeByOffice(officeId);
     }
 
     @GetMapping("/all")

@@ -1,5 +1,6 @@
 package filiciak.cyran.demo.UI.views.adminViews.seat;
 
+import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
@@ -24,9 +25,6 @@ public class ManageSeatViewCard extends ListItem {
 
     public ManageSeatViewCard(Seat seat, SeatController seatController) throws BadRequestException {
         this.seatController = seatController;
-        if (!seat.getStatus().equals(AvailabilityStatus.FREE)) {
-            return;
-        }
 
         addClassNames(LumoUtility.Background.CONTRAST_5, LumoUtility.Display.FLEX, LumoUtility.FlexDirection.COLUMN, LumoUtility.AlignItems.START, LumoUtility.Padding.MEDIUM,
                 LumoUtility.BorderRadius.LARGE);
@@ -49,7 +47,7 @@ public class ManageSeatViewCard extends ListItem {
         equipment.addClassNames(LumoUtility.FontSize.XLARGE, LumoUtility.FontWeight.SEMIBOLD);
         List<String> equipmentList = seatController.getEquipment(seat.getId());
         StringBuilder stringBuilder = new StringBuilder("Equipment: \n");
-        equipmentList.forEach(s -> stringBuilder.append(s).append("\n"));
+        equipmentList.forEach(s -> stringBuilder.append(s));
         equipment.setText("\n" + stringBuilder);
 
         Button button = new Button();
@@ -69,7 +67,10 @@ public class ManageSeatViewCard extends ListItem {
         div4.setWidth("10px");
 
 
-        button.addClickListener(e -> UI.getCurrent().navigate(ChangeSingleSeatView.class));
+        button.addClickListener(e -> {
+            ComponentUtil.setData(UI.getCurrent(), Seat.class, seat);
+            UI.getCurrent().navigate(ChangeSingleSeatView.class);
+        });
 
         add(div, header, div2, status, div3, equipment, div4, button);
     }

@@ -114,6 +114,11 @@ public class SeatService {
         return seatRepository.findSeatsByOfficeId(officeId);
     }
 
+    public List<Seat> findAllFreeByOffice(Integer officeId) {
+        log.debug("Request to get all free Seats from {} ", officeRepository.findById(officeId).get());
+        return seatRepository.findFreeSeatsByOfficeId(officeId);
+    }
+
     public void delete(Integer id) throws BadRequestException {
         if(!seatRepository.existsById(id)){
             throw new BadRequestException("Seat with id " + id + "  does not exist");

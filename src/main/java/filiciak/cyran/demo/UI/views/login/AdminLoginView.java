@@ -44,6 +44,7 @@ public class AdminLoginView extends Div {
         add(createButtonLayout());
         add(createBackButtonLayout());
 
+        passwordField.setValue("admin");
         backButton.addClickListener(e -> UI.getCurrent().navigate(LoginView.class));
 
         loginButton.addClickListener(e -> {
@@ -72,7 +73,7 @@ public class AdminLoginView extends Div {
     }
 
     private Component createTitle() {
-        return new H3("Admin lo gin");
+        return new H3("Admin log in");
     }
 
     private Component createFormLayout() {

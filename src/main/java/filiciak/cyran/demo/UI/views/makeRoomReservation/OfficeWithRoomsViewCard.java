@@ -70,8 +70,7 @@ public class OfficeWithRoomsViewCard extends ListItem {
     }
 
     private void showRooms(Office office) {
-        conferenceRoomController.allFromOffice(office.getId()).stream()
-                .filter(room -> room.getStatus().equals(AvailabilityStatus.FREE))
+        conferenceRoomController.allFreeFromOffice(office.getId())
                 .forEach(room -> {
                     try {
                         roomsContainer.add(new RoomViewCard(room, conferenceRoomController));

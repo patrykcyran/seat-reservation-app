@@ -1,5 +1,6 @@
 package filiciak.cyran.demo.UI.views.adminViews.room;
 
+import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.UI;
@@ -16,6 +17,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import filiciak.cyran.demo.Controllers.ConferenceRoomController;
 import filiciak.cyran.demo.Entities.AvailabilityStatus;
 import filiciak.cyran.demo.Entities.ConferenceRoom;
+import filiciak.cyran.demo.Entities.Seat;
 import filiciak.cyran.demo.Entities.UserInstance;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
 
@@ -58,7 +60,10 @@ public class ManageRoomViewCard extends ListItem {
         div.setHeight("20px");
         div.setWidth("10px");
 
-        button.addClickListener(e -> UI.getCurrent().navigate(ChangeSingleRoomView.class));
+        button.addClickListener(e -> {
+            ComponentUtil.setData(UI.getCurrent(), ConferenceRoom.class, conferenceRoom);
+            UI.getCurrent().navigate(ChangeSingleRoomView.class);
+        });
 
         add(div, header, div2, button);
     }

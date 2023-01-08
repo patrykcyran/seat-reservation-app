@@ -3,7 +3,7 @@ package filiciak.cyran.demo.Entities;
 import javax.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -19,10 +19,10 @@ public class ConferenceRoomReserved {
     private String name;
 
     @Column(nullable = false)
-    private LocalDateTime fromDate;
+    private LocalDate fromDate;
 
     @Column(nullable = false)
-    private LocalDateTime toDate;
+    private LocalDate toDate;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

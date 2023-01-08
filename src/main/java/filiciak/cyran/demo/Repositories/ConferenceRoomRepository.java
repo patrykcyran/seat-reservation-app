@@ -22,4 +22,7 @@ public interface ConferenceRoomRepository extends JpaRepository<ConferenceRoom, 
             value = "SELECT name FROM equipment JOIN conference_room_equipments ON equipment.id = conference_room_equipments.equipments_id WHERE conference_room_id = :room_id",
             nativeQuery = true)
     List<String> findEquipmentByRoomId(@Param("room_id") Integer seatId);
+
+    @Query("select r from ConferenceRoom r where r.officeId = :office_id and r.status = 'FREE'")
+    List<ConferenceRoom> findFreeRoomsByOfficeId(@Param("office_id") Integer officeId);
 }

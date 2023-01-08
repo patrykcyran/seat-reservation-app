@@ -70,6 +70,11 @@ public class SeatController {
         return seatService.findAllByOffice(officeId);
     }
 
+    public List<Seat> allFreeFromOffice(@PathVariable Integer officeId) {
+        log.debug("REST request to get all free Seats from the office");
+        return seatService.findAllFreeByOffice(officeId);
+    }
+
     @GetMapping("/all")
     public List<Seat> all() {
         log.debug("REST request to get all of Seats");

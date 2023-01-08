@@ -60,6 +60,14 @@ public class EquipmentService {
         return equipmentRepository.findById(id).get();
     }
 
+    public Equipment findByName(String name) throws BadRequestException {
+        if(equipmentRepository.findAll().stream().noneMatch(e -> e.getName().equals(name))){
+            throw new BadRequestException("Equipment with name " + name + "  does not exist");
+        }
+        log.debug("Request to get Equipment name : {}", name);
+        return equipmentRepository.findByName(name);
+    }
+
     public void delete(Integer id) throws BadRequestException {
         if(!equipmentRepository.existsById(id)){
             throw new BadRequestException("Equipment with id " + id + "  does not exist");

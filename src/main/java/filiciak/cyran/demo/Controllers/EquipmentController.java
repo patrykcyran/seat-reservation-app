@@ -52,6 +52,13 @@ public class EquipmentController {
         log.debug("REST request to get Equipment : {}", id);
         return equipmentService.findById(id);
     }
+
+    @GetMapping("/{name}")
+     public Equipment getEquipmentByName(@PathVariable String name) throws BadRequestException {
+        log.debug("REST request to get Equipment by name: {}", name);
+        return equipmentService.findByName(name);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteEquipment(@PathVariable Integer id, @RequestHeader String authorization) throws BadRequestException {
         if (authorization.equals("admin")) {

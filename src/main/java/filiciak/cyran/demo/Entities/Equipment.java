@@ -16,4 +16,11 @@ public class Equipment {
     @Column(nullable = false)
     private String name;
 
+    public Equipment(String name) {
+        this.name = name;
+    }
+
+    public Equipment() {
+
+    }
 }

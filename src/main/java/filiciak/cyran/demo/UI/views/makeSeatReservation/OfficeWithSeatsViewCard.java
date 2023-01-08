@@ -67,8 +67,7 @@ public class OfficeWithSeatsViewCard extends ListItem {
     }
 
     private void showSeats(Office office) {
-        seatController.allFromOffice(office.getId()).stream()
-                .filter(seat -> seat.getStatus().equals(AvailabilityStatus.FREE))
+        seatController.allFreeFromOffice(office.getId())
                 .forEach(seat -> {
                     try {
                         seatsContainer.add(new SeatViewCard(seat, seatController));

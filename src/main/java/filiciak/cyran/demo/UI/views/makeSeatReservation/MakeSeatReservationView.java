@@ -68,21 +68,6 @@ public class MakeSeatReservationView extends Div implements AfterNavigationObser
         add(container, officeContainer);
     }
 
-    private HorizontalLayout createCard(Office office) {
-        HorizontalLayout card = new HorizontalLayout();
-        card.addClassName("card");
-        card.setSpacing(false);
-        card.getThemeList().add("spacing-s");
-
-        HorizontalLayout header = new HorizontalLayout();
-        header.addClassName("header");
-        header.setSpacing(false);
-        header.getThemeList().add("spacing-s");
-
-        card.add(office.getName());
-        return card;
-    }
-
     @Override
     public void afterNavigation(AfterNavigationEvent event) {
         if (!UserInstance.getInstance().isLogged()) {
