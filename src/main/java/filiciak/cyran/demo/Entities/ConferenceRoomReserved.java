@@ -16,9 +16,6 @@ public class ConferenceRoomReserved {
     private Integer id;
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
     private LocalDate fromDate;
 
     @Column(nullable = false)
