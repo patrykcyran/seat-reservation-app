@@ -11,10 +11,7 @@ import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.router.AfterNavigationEvent;
-import com.vaadin.flow.router.AfterNavigationObserver;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import filiciak.cyran.demo.Controllers.ConferenceRoomController;
 import filiciak.cyran.demo.Controllers.OfficeController;
@@ -26,7 +23,7 @@ import filiciak.cyran.demo.UI.views.login.LoginView;
 
 @PageTitle("Make Room Reservation")
 @Route(value = "make-room-reservation", layout = MainLayout.class)
-public class MakeRoomReservationView extends Div implements AfterNavigationObserver, HasComponents, HasStyle {
+public class MakeRoomReservationView extends Div implements AfterNavigationObserver, HasComponents, HasStyle, BeforeEnterObserver {
 
 
     Grid<Office> grid = new Grid<>();
@@ -76,5 +73,12 @@ public class MakeRoomReservationView extends Div implements AfterNavigationObser
         }
 
         grid.setItems(officeController.all());
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        if (!UserInstance.getInstance().isLogged()) {
+            UI.getCurrent().navigate(LoginView.class);
+        }
     }
 }

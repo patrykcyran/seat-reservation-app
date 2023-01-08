@@ -1,4 +1,4 @@
-package filiciak.cyran.demo.UI.views.adminViews.room;
+package filiciak.cyran.demo.UI.views.adminViews.seat;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
@@ -6,116 +6,111 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import filiciak.cyran.demo.Controllers.ConferenceRoomController;
 import filiciak.cyran.demo.Controllers.EquipmentController;
 import filiciak.cyran.demo.Controllers.OfficeController;
 import filiciak.cyran.demo.Controllers.SeatController;
-import filiciak.cyran.demo.Entities.*;
+import filiciak.cyran.demo.Entities.AvailabilityStatus;
+import filiciak.cyran.demo.Entities.Seat;
+import filiciak.cyran.demo.Entities.SeatType;
+import filiciak.cyran.demo.Entities.UserInstance;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
 import filiciak.cyran.demo.UI.views.MainLayout;
-import filiciak.cyran.demo.UI.views.adminViews.seat.ManageSeatView;
 import filiciak.cyran.demo.UI.views.login.LoginView;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-@PageTitle("Manage Single Room")
-@Route(value = "manage-single-room", layout = MainLayout.class)
-public class ChangeSingleRoomView extends Div implements AfterNavigationObserver, HasComponents, HasStyle{
+@PageTitle("Add Seat")
+@Route(value = "add-seat-view", layout = MainLayout.class)
+public class AddSeatView extends Div implements AfterNavigationObserver, HasComponents, HasStyle {
 
     private ComboBox<String> reservationStatus = new ComboBox<>();
+    private ComboBox<String> seatType = new ComboBox<>();
     private ComboBox<String> office = new ComboBox<>();
     private CheckboxGroup<String> equipment = new CheckboxGroup<>();
 
     private Button cancel = new Button("Cancel");
-    private Button save = new Button("Save");
+    private Button add = new Button("Add");
 
-    private Button delete = new Button("Delete");
-
-    ConferenceRoomController conferenceRoomController;
+    SeatController seatController;
     OfficeController officeController;
     EquipmentController equipmentController;
-    ConferenceRoom room = new ConferenceRoom();
+    Seat seat = new Seat();
 
-    public ChangeSingleRoomView(OfficeController officeController, ConferenceRoomController conferenceRoomController, EquipmentController equipmentController) throws BadRequestException {
+    public AddSeatView(OfficeController officeController, SeatController seatController, EquipmentController equipmentController) throws BadRequestException {
         this.officeController = officeController;
-        this.conferenceRoomController = conferenceRoomController;
+        this.seatController = seatController;
         this.equipmentController = equipmentController;
-        if(ComponentUtil.getData(UI.getCurrent(), ConferenceRoom.class) == null) {
-            UI.getCurrent().navigate(ManageRoomView.class);
-        }
-        room = ComponentUtil.getData(UI.getCurrent(), ConferenceRoom.class);
-        addClassName("manage-single-room-view");
+        addClassName("manage-single-seat-view");
 
         add(createTitle());
         add(createFormLayout());
         add(createButtonLayout());
 
 
-        cancel.addClickListener(e -> UI.getCurrent().navigate(ManageRoomView.class));
-        save.addClickListener(e -> {
-            room.setStatus(AvailabilityStatus.valueOf(reservationStatus.getValue()));
+        cancel.addClickListener(e -> UI.getCurrent().navigate(ManageSeatView.class));
+        add.addClickListener(e -> {
+            ResponseEntity<Seat> createdSeat;
 
-            this.equipmentController.all().forEach(eq -> {
-                try {
-                    this.conferenceRoomController.deleteEquipment(room.getId(), eq.getId(), "admin");
-                } catch (BadRequestException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
+            if (reservationStatus.isEmpty() || seatType.isEmpty() || office.isEmpty()) {
+                Notification.show("All fields must be filled up", 5000, Notification.Position.MIDDLE);
+                return;
+            }
+
+            seat.setStatus(AvailabilityStatus.valueOf(reservationStatus.getValue()));
+            seat.setType(SeatType.valueOf(seatType.getValue()));
+            seat.setSeatNumber(seatController.getSeatWithHighestNumber().getSeatNumber() + 1);
+            seat.setId(null);
 
             try {
-                room.setOfficeId(officeController.getOfficeByName(office.getValue()).getId());
+                seat.setOfficeID(this.officeController.getOfficeByName(office.getValue()).getId());
             } catch (BadRequestException ex) {
                 throw new RuntimeException(ex);
             }
             try {
-                conferenceRoomController.updateRoom(room, "admin");
+                createdSeat = this.seatController.createSeat(seat, "admin");
             } catch (BadRequestException ex) {
                 throw new RuntimeException(ex);
             }
+
+            seat = createdSeat.getBody();
 
             Set<String> selectedEquipmentSet = equipment.getSelectedItems();
             List<String> selectedEquipmentList = selectedEquipmentSet.stream().toList();
             selectedEquipmentList.forEach(eq -> {
                 try {
-                    this.conferenceRoomController.addEquipment(room.getId(), this.equipmentController.getEquipmentByName(eq).getId(), "admin");
+                    this.seatController.addEquipment(seat.getId(), this.equipmentController.getEquipmentByName(eq).getId(), "admin");
                 } catch (BadRequestException ex) {
                     throw new RuntimeException(ex);
                 }
             });
 
-            UI.getCurrent().navigate(ManageRoomView.class);
-        });
-        delete.addClickListener(e -> {
-            try {
-                conferenceRoomController.deleteRoom(room.getId(), "admin");
-            } catch (BadRequestException ex) {
-                throw new RuntimeException(ex);
-            }
             UI.getCurrent().navigate(ManageSeatView.class);
         });
     }
 
     private Component createTitle() {
-        return new H3("Room " + room.getName());
+        return new H3("Create new seat");
     }
 
-    private Component createFormLayout() throws BadRequestException {
+    private Component createFormLayout() {
         FormLayout formLayout = new FormLayout();
 
         List<String> statusList = new ArrayList<>();
         Arrays.stream(AvailabilityStatus.values()).forEach(s -> statusList.add(s.name()));
+
+        List<String> seatTypeList = new ArrayList<>();
+        Arrays.stream(SeatType.values()).forEach(s -> seatTypeList.add(s.name()));
 
         List<String> officeList = new ArrayList<>();
         officeController.all().forEach(o -> officeList.add(o.getName()));
@@ -123,35 +118,34 @@ public class ChangeSingleRoomView extends Div implements AfterNavigationObserver
         List<String> equipmentList = new ArrayList<>();
         equipmentController.all().forEach(e -> equipmentList.add(e.getName()));
 
-        List<String> currentEquipment = new ArrayList<>(conferenceRoomController.getEquipment(room.getId()));
-
         reservationStatus.setWidth("120px");
         reservationStatus.setLabel("Reservation Status");
         reservationStatus.setItems(statusList);
-        reservationStatus.setValue(room.getStatus().name());
+        reservationStatus.setValue(AvailabilityStatus.FREE.name());
+
+        seatType.setWidth("120px");
+        seatType.setLabel("Seat Type");
+        seatType.setItems(seatTypeList);
+        seatType.setValue(SeatType.NORMAL.name());
 
         office.setWidth("120px");
         office.setLabel("Office");
         office.setItems(officeList);
-        office.setValue(officeController.getOffice(room.getOfficeId()).getName());
 
         equipment.setWidth("120px");
         equipment.setLabel("Equipment");
         equipment.setItems(equipmentList);
-        equipment.select(currentEquipment);
 
-        formLayout.add(reservationStatus, office, equipment);
+        formLayout.add(reservationStatus, seatType, office, equipment);
         return formLayout;
     }
 
     private Component createButtonLayout() {
         HorizontalLayout buttonLayout = new HorizontalLayout();
         buttonLayout.addClassName("button-layout");
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        delete.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buttonLayout.add(save);
+        add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buttonLayout.add(add);
         buttonLayout.add(cancel);
-        buttonLayout.add(delete);
         return buttonLayout;
     }
 

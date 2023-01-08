@@ -113,11 +113,11 @@ public class ConferenceRoomService {
     }
 
     public void delete(Integer id) throws BadRequestException {
-        ConferenceRoom room = conferenceRoomRepository.getReferenceById(id);
-        if(!room.getEquipments().isEmpty()){
-            throw new BadRequestException("Room has children (first delete equipment)");
+        if(!conferenceRoomRepository.existsById(id)) {
+            throw new BadRequestException("Room with id " + id + "  does not exist");
         }
         log.debug("Request to delete Room : {} ", id);
+
         conferenceRoomRepository.deleteById(id);
     }
 

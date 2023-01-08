@@ -29,7 +29,7 @@ public class Seat implements Serializable {
     @Enumerated(EnumType.STRING)
     private SeatType type;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Equipment> equipments;
 
     @Column(nullable = false)

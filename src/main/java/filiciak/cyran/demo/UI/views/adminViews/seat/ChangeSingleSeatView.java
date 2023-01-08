@@ -46,6 +46,7 @@ public class ChangeSingleSeatView extends Div implements AfterNavigationObserver
 
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
+    private Button delete = new Button("Delete");
 
     SeatController seatController;
     OfficeController officeController;
@@ -103,6 +104,14 @@ public class ChangeSingleSeatView extends Div implements AfterNavigationObserver
 
             UI.getCurrent().navigate(ManageSeatView.class);
         });
+        delete.addClickListener(e -> {
+            try {
+                seatController.deleteSeat(seat.getId(), "admin");
+            } catch (BadRequestException ex) {
+                throw new RuntimeException(ex);
+            }
+            UI.getCurrent().navigate(ManageSeatView.class);
+        });
     }
 
     private Component createTitle() {
@@ -154,8 +163,10 @@ public class ChangeSingleSeatView extends Div implements AfterNavigationObserver
         HorizontalLayout buttonLayout = new HorizontalLayout();
         buttonLayout.addClassName("button-layout");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        delete.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonLayout.add(save);
         buttonLayout.add(cancel);
+        buttonLayout.add(delete);
         return buttonLayout;
     }
 

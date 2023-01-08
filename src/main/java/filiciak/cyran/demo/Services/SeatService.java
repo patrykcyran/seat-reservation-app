@@ -7,13 +7,10 @@ import filiciak.cyran.demo.Repositories.EquipmentRepository;
 import filiciak.cyran.demo.Repositories.OfficeRepository;
 import filiciak.cyran.demo.Repositories.SeatRepository;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import org.slf4j.Logger;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 @Service
@@ -135,5 +132,9 @@ public class SeatService {
         log.debug("Request to get equipment for Seat : {} ", id);
 
         return seatRepository.findEquipmentBySeatId(id);
+    }
+
+    public Seat findSeatWithHighestNumber() {
+        return seatRepository.findSeatWithHighestNumber();
     }
 }

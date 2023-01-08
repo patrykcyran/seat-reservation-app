@@ -3,6 +3,8 @@ package filiciak.cyran.demo.UI.views.adminViews.seat;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
@@ -53,18 +55,24 @@ public class ManageSeatView extends Div implements AfterNavigationObserver, HasC
         container.addClassNames(LumoUtility.AlignItems.CENTER, LumoUtility.JustifyContent.BETWEEN);
 
         VerticalLayout headerContainer = new VerticalLayout();
-        H2 header = new H2("Offices");
+        H2 header = new H2("Seats");
         header.addClassNames(LumoUtility.Margin.Bottom.NONE, LumoUtility.Margin.Top.NONE, LumoUtility.FontSize.XXXLARGE);
-        Paragraph description = new Paragraph("Choose office in which you want to make reservation");
+        Paragraph description = new Paragraph("Choose seat to manage");
         description.addClassNames(LumoUtility.Margin.Bottom.XLARGE, LumoUtility.Margin.Top.NONE, LumoUtility.TextColor.SECONDARY);
         headerContainer.add(header, description);
 
+        Button button = new Button();
+        button.addClassNames(LumoUtility.AlignItems.START);
+        button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        button.setText("Add Seat");
+
+        button.addClickListener(e -> {UI.getCurrent().navigate(AddSeatView.class);});
 
         seatsContainer = new OrderedList();
         seatsContainer.addClassNames(LumoUtility.Gap.MEDIUM, LumoUtility.Display.GRID, LumoUtility.ListStyleType.NONE, LumoUtility.Margin.LARGE, LumoUtility.Padding.NONE);
 
         container.add(headerContainer);
-        add(container, seatsContainer);
+        add(container, button, seatsContainer);
     }
 
     @Override

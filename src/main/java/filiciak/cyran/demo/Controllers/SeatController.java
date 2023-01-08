@@ -1,21 +1,15 @@
 package filiciak.cyran.demo.Controllers;
 
-import filiciak.cyran.demo.Entities.Equipment;
-import filiciak.cyran.demo.Entities.Office;
 import filiciak.cyran.demo.Entities.Seat;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
-import filiciak.cyran.demo.Services.OfficeService;
 import filiciak.cyran.demo.Services.SeatService;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/seat")
@@ -100,5 +94,10 @@ public class SeatController {
     public List<String> getEquipment(@PathVariable Integer id) throws BadRequestException {
         log.debug("REST request to get equipment for Seat : {}", id);
         return seatService.findEquipmentBySeatId(id);
+    }
+
+    @GetMapping("/max")
+    public Seat getSeatWithHighestNumber() {
+        return seatService.findSeatWithHighestNumber();
     }
 }

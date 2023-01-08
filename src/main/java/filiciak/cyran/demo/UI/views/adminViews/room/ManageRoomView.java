@@ -3,6 +3,8 @@ package filiciak.cyran.demo.UI.views.adminViews.room;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
@@ -20,6 +22,7 @@ import filiciak.cyran.demo.Entities.ConferenceRoom;
 import filiciak.cyran.demo.Entities.UserInstance;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
 import filiciak.cyran.demo.UI.views.MainLayout;
+import filiciak.cyran.demo.UI.views.adminViews.seat.AddSeatView;
 import filiciak.cyran.demo.UI.views.login.LoginView;
 
 @PageTitle("Manage Rooms")
@@ -57,12 +60,18 @@ public class ManageRoomView extends Div implements AfterNavigationObserver, HasC
         description.addClassNames(LumoUtility.Margin.Bottom.XLARGE, LumoUtility.Margin.Top.NONE, LumoUtility.TextColor.SECONDARY);
         headerContainer.add(header, description);
 
+        Button button = new Button();
+        button.addClassNames(LumoUtility.AlignItems.START);
+        button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        button.setText("Add Room");
+
+        button.addClickListener(e -> {UI.getCurrent().navigate(AddRoomView.class);});
 
         roomsContainer = new OrderedList();
         roomsContainer.addClassNames(LumoUtility.Gap.MEDIUM, LumoUtility.Display.GRID, LumoUtility.ListStyleType.NONE, LumoUtility.Margin.LARGE, LumoUtility.Padding.NONE);
 
         container.add(headerContainer);
-        add(container, roomsContainer);
+        add(container, button, roomsContainer);
     }
 
     @Override
