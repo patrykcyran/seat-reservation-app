@@ -79,6 +79,11 @@ public class ConferenceRoomController {
         return conferenceRoomService.findById(id);
     }
 
+    @GetMapping("/{name}/{id}")
+    public ConferenceRoom getRoomByNameAndOfficeId(@PathVariable String name, @PathVariable Integer officeId) {
+        return conferenceRoomService.findRoomByNameAndOfficeId(name, officeId);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteRoom(@PathVariable Integer id, @RequestHeader String authorization) throws BadRequestException {
         if (authorization.equals("admin")) {
@@ -86,6 +91,7 @@ public class ConferenceRoomController {
             conferenceRoomService.delete(id);
         } else throw new BadRequestException("Authorization header is invalid.");
     }
+
 
 
     @GetMapping("/eq/{id}")

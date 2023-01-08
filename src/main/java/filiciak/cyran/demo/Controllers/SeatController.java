@@ -64,6 +64,7 @@ public class SeatController {
         return seatService.findAllByOffice(officeId);
     }
 
+    @GetMapping("/{officeId}")
     public List<Seat> allFreeFromOffice(@PathVariable Integer officeId) {
         log.debug("REST request to get all free Seats from the office");
         return seatService.findAllFreeByOffice(officeId);
