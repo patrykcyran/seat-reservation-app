@@ -29,9 +29,6 @@ public class ManageRoomViewCard extends ListItem {
 
     public ManageRoomViewCard(ConferenceRoom conferenceRoom, ConferenceRoomController conferenceRoomController) throws BadRequestException {
         this.conferenceRoomController = conferenceRoomController;
-        if (!conferenceRoom.getStatus().equals(AvailabilityStatus.FREE)) {
-            return;
-        }
 
         addClassNames(LumoUtility.Background.CONTRAST_5, LumoUtility.Display.FLEX, LumoUtility.FlexDirection.COLUMN, LumoUtility.AlignItems.START, LumoUtility.Padding.MEDIUM,
                 LumoUtility.BorderRadius.LARGE);
@@ -46,25 +43,38 @@ public class ManageRoomViewCard extends ListItem {
         header.addClassNames(LumoUtility.FontSize.XLARGE, LumoUtility.FontWeight.SEMIBOLD);
         header.setText("Room name: " + conferenceRoom.getName());
 
-        //TODO: Add equipment for room
+        Span status = new Span();
+        status.addClassNames(LumoUtility.FontSize.XLARGE, LumoUtility.FontWeight.SEMIBOLD);
+        status.setText("Status " + conferenceRoom.getStatus().toString());
+
+        Span equipment = new Span();
+        equipment.addClassNames(LumoUtility.FontSize.XLARGE, LumoUtility.FontWeight.SEMIBOLD);
+        List<String> equipmentList = conferenceRoomController.getEquipment(conferenceRoom.getId());
+        StringBuilder stringBuilder = new StringBuilder("Equipment: \n");
+        equipmentList.forEach(s -> stringBuilder.append(s).append("\n"));
+        equipment.setText("\n" + stringBuilder);
 
         Button button = new Button();
         button.addClassNames(LumoUtility.AlignItems.END);
         button.setText("Manage");
 
         Div div2 = new Div();
-        div.setHeight("20px");
-        div.setWidth("10px");
+        div2.setHeight("20px");
+        div2.setWidth("10px");
 
         Div div3 = new Div();
-        div.setHeight("20px");
-        div.setWidth("10px");
+        div3.setHeight("20px");
+        div3.setWidth("10px");
+
+        Div div4 = new Div();
+        div4.setHeight("20px");
+        div4.setWidth("10px");
 
         button.addClickListener(e -> {
             ComponentUtil.setData(UI.getCurrent(), ConferenceRoom.class, conferenceRoom);
             UI.getCurrent().navigate(ChangeSingleRoomView.class);
         });
 
-        add(div, header, div2, button);
+        add(div, header, div2, status, div3, equipment, div4, button);
     }
 }

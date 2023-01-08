@@ -47,7 +47,7 @@ public class ManageSeatViewCard extends ListItem {
         equipment.addClassNames(LumoUtility.FontSize.XLARGE, LumoUtility.FontWeight.SEMIBOLD);
         List<String> equipmentList = seatController.getEquipment(seat.getId());
         StringBuilder stringBuilder = new StringBuilder("Equipment: \n");
-        equipmentList.forEach(s -> stringBuilder.append(s));
+        equipmentList.forEach(s -> stringBuilder.append(s).append("\n"));
         equipment.setText("\n" + stringBuilder);
 
         Button button = new Button();

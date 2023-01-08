@@ -29,4 +29,11 @@ public class UserInstance {
             INSTANCE.setAdmin(false);
         }
     }
+
+    public static void logOut() {
+        INSTANCE.setUsername(null);
+        INSTANCE.setLogged(false);
+        INSTANCE.setAdmin(false);
+
+    }
 }

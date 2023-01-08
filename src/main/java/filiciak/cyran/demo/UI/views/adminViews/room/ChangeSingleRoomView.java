@@ -14,6 +14,7 @@ import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import filiciak.cyran.demo.Controllers.ConferenceRoomController;
+import filiciak.cyran.demo.Controllers.EquipmentController;
 import filiciak.cyran.demo.Controllers.OfficeController;
 import filiciak.cyran.demo.Controllers.SeatController;
 import filiciak.cyran.demo.Entities.*;
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @PageTitle("Manage Single Room")
 @Route(value = "manage-single-room", layout = MainLayout.class)
@@ -40,11 +42,13 @@ public class ChangeSingleRoomView extends Div implements AfterNavigationObserver
 
     ConferenceRoomController conferenceRoomController;
     OfficeController officeController;
+    EquipmentController equipmentController;
     ConferenceRoom room = new ConferenceRoom();
 
-    public ChangeSingleRoomView(OfficeController officeController, ConferenceRoomController conferenceRoomController) throws BadRequestException {
+    public ChangeSingleRoomView(OfficeController officeController, ConferenceRoomController conferenceRoomController, EquipmentController equipmentController) throws BadRequestException {
         this.officeController = officeController;
         this.conferenceRoomController = conferenceRoomController;
+        this.equipmentController = equipmentController;
         if(ComponentUtil.getData(UI.getCurrent(), Seat.class) == null) {
             UI.getCurrent().navigate(ManageSeatView.class);
         }
@@ -59,6 +63,15 @@ public class ChangeSingleRoomView extends Div implements AfterNavigationObserver
         cancel.addClickListener(e -> UI.getCurrent().navigate(ManageSeatView.class));
         save.addClickListener(e -> {
             room.setStatus(AvailabilityStatus.valueOf(reservationStatus.getValue()));
+
+            this.equipmentController.all().forEach(eq -> {
+                try {
+                    this.conferenceRoomController.deleteEquipment(room.getId(), eq.getId(), "admin");
+                } catch (BadRequestException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+
             try {
                 room.setOfficeId(officeController.getOfficeByName(office.getValue()).getId());
             } catch (BadRequestException ex) {
@@ -69,7 +82,18 @@ public class ChangeSingleRoomView extends Div implements AfterNavigationObserver
             } catch (BadRequestException ex) {
                 throw new RuntimeException(ex);
             }
-            UI.getCurrent().navigate(ManageSeatView.class);
+
+            Set<String> selectedEquipmentSet = equipment.getSelectedItems();
+            List<String> selectedEquipmentList = selectedEquipmentSet.stream().toList();
+            selectedEquipmentList.forEach(eq -> {
+                try {
+                    this.conferenceRoomController.addEquipment(room.getId(), this.equipmentController.getEquipmentByName(eq).getId(), "admin");
+                } catch (BadRequestException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+
+            UI.getCurrent().navigate(ManageRoomView.class);
         });
     }
 
@@ -86,6 +110,11 @@ public class ChangeSingleRoomView extends Div implements AfterNavigationObserver
         List<String> officeList = new ArrayList<>();
         officeController.all().forEach(o -> officeList.add(o.getName()));
 
+        List<String> equipmentList = new ArrayList<>();
+        equipmentController.all().forEach(e -> equipmentList.add(e.getName()));
+
+        List<String> currentEquipment = new ArrayList<>(conferenceRoomController.getEquipment(room.getId()));
+
         reservationStatus.setWidth("120px");
         reservationStatus.setLabel("Reservation Status");
         reservationStatus.setItems(statusList);
@@ -96,7 +125,12 @@ public class ChangeSingleRoomView extends Div implements AfterNavigationObserver
         office.setItems(officeList);
         office.setValue(officeController.getOffice(room.getOfficeId()).getName());
 
-        formLayout.add(reservationStatus, office);
+        equipment.setWidth("120px");
+        equipment.setLabel("Equipment");
+        equipment.setItems(equipmentList);
+        equipment.select(currentEquipment);
+
+        formLayout.add(reservationStatus, office, equipment);
         return formLayout;
     }
 

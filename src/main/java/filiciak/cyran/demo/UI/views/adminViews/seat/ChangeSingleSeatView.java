@@ -142,7 +142,7 @@ public class ChangeSingleSeatView extends Div implements AfterNavigationObserver
         office.setValue(officeController.getOffice(seat.getOfficeID()).getName());
 
         equipment.setWidth("120px");
-        equipment.setLabel("Office");
+        equipment.setLabel("Equipment");
         equipment.setItems(equipmentList);
         equipment.select(currentEquipment);
 

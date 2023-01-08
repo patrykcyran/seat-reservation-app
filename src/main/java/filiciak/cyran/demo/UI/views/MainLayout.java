@@ -3,6 +3,8 @@ package filiciak.cyran.demo.UI.views;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -48,7 +50,17 @@ public class MainLayout extends AppLayout {
 
         Scroller scroller = new Scroller(createNavigation());
 
-        addToDrawer(header, scroller, createFooter());
+        Button logOutButton = new Button();
+        logOutButton.addClassNames(LumoUtility.AlignItems.CENTER);
+        logOutButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        logOutButton.setText("Log out");
+
+        logOutButton.addClickListener(e -> {
+            UserInstance.logOut();
+            UI.getCurrent().navigate(LoginView.class);
+        });
+
+        addToDrawer(header, scroller, logOutButton, createFooter());
     }
 
     private AppNav createNavigation() {
