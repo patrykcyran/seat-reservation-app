@@ -16,15 +16,11 @@ public class SeatReserved {
     private Integer id;
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
     private LocalDate fromDate;
 
     @Column(nullable = false)
     private LocalDate toDate;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
