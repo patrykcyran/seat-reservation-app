@@ -8,22 +8,23 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import filiciak.cyran.demo.Controllers.AddressController;
 import filiciak.cyran.demo.Controllers.EquipmentController;
 import filiciak.cyran.demo.Controllers.OfficeController;
 import filiciak.cyran.demo.Controllers.SeatController;
-import filiciak.cyran.demo.Entities.AvailabilityStatus;
-import filiciak.cyran.demo.Entities.Seat;
-import filiciak.cyran.demo.Entities.SeatType;
-import filiciak.cyran.demo.Entities.UserInstance;
+import filiciak.cyran.demo.Entities.*;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
 import filiciak.cyran.demo.UI.views.MainLayout;
 import filiciak.cyran.demo.UI.views.adminViews.seat.ManageSeatView;
 import filiciak.cyran.demo.UI.views.login.LoginView;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,74 +36,72 @@ import java.util.Set;
 @Route(value = "manage-single-office", layout = MainLayout.class)
 public class ChangeSingleOfficeView extends Div implements AfterNavigationObserver, HasComponents, HasStyle {
 
-    private ComboBox<String> reservationStatus = new ComboBox<>();
-    private ComboBox<String> seatType = new ComboBox<>();
-    private ComboBox<String> office = new ComboBox<>();
-    private CheckboxGroup<String> equipment = new CheckboxGroup<>();
+    private TextField officeName = new TextField();
+    private TextField city = new TextField();
+    private TextField country = new TextField();
+    private TextField postal_code = new TextField();
+    private TextField street = new TextField();
 
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
     private Button delete = new Button("Delete");
 
-    SeatController seatController;
     OfficeController officeController;
-    EquipmentController equipmentController;
-    Seat seat = new Seat();
+    AddressController addressController;
+    Office office = new Office();
+    Address address;
 
-    public ChangeSingleOfficeView(OfficeController officeController, SeatController seatController, EquipmentController equipmentController) throws BadRequestException {
+    public ChangeSingleOfficeView(OfficeController officeController, AddressController addressController) throws BadRequestException {
         this.officeController = officeController;
-        this.seatController = seatController;
-        this.equipmentController = equipmentController;
+        this.addressController = addressController;
         if(ComponentUtil.getData(UI.getCurrent(), Seat.class) == null) {
             UI.getCurrent().navigate(ManageSeatView.class);
         }
-        seat = ComponentUtil.getData(UI.getCurrent(), Seat.class);
-        addClassName("manage-single-seat-view");
+        office = ComponentUtil.getData(UI.getCurrent(), Office.class);
+        address = office.getAddress();
+        addClassName("manage-single-office-view");
 
         add(createTitle());
         add(createFormLayout());
         add(createButtonLayout());
 
 
-        cancel.addClickListener(e -> UI.getCurrent().navigate(ManageSeatView.class));
+        cancel.addClickListener(e -> UI.getCurrent().navigate(ManageOfficeView.class));
         save.addClickListener(e -> {
-            seat.setStatus(AvailabilityStatus.valueOf(reservationStatus.getValue()));
-            seat.setType(SeatType.valueOf(seatType.getValue()));
 
-            this.equipmentController.all().forEach(eq -> {
+            if (officeName.isEmpty() || city.isEmpty() || country.isEmpty() || postal_code.isEmpty() || street.isEmpty()) {
+                Notification.show("All fields must be filled up", 5000, Notification.Position.MIDDLE);
+                return;
+            }
+
+            Address address = new Address();
+            address.setCity(city.getValue());
+            address.setCountry(country.getValue());
+            address.setStreet(street.getValue());
+            address.setPostalCode(postal_code.getValue());
+
+            if(!addressController.all().contains(address)) {
                 try {
-                    this.seatController.deleteEquipment(seat.getId(), eq.getId(), "admin");
+                    addressController.createAddress(address, "admin");
                 } catch (BadRequestException ex) {
                     throw new RuntimeException(ex);
                 }
-            });
+            }
+
+            office.setAddress(address);
+            office.setName(officeName.getValue());
 
             try {
-                seat.setOfficeID(this.officeController.getOfficeByName(office.getValue()).getId());
+                officeController.updateOffice(office, "admin");
             } catch (BadRequestException ex) {
                 throw new RuntimeException(ex);
             }
-            try {
-                this.seatController.updateSeat(seat, "admin");
-            } catch (BadRequestException ex) {
-                throw new RuntimeException(ex);
-            }
 
-            Set<String> selectedEquipmentSet = equipment.getSelectedItems();
-            List<String> selectedEquipmentList = selectedEquipmentSet.stream().toList();
-            selectedEquipmentList.forEach(eq -> {
-                try {
-                    this.seatController.addEquipment(seat.getId(), this.equipmentController.getEquipmentByName(eq).getId(), "admin");
-                } catch (BadRequestException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-
-            UI.getCurrent().navigate(ManageSeatView.class);
+            UI.getCurrent().navigate(ManageOfficeView.class);
         });
         delete.addClickListener(e -> {
             try {
-                seatController.deleteSeat(seat.getId(), "admin");
+                officeController.deleteOffice(office.getId(), "admin");
             } catch (BadRequestException ex) {
                 throw new RuntimeException(ex);
             }
@@ -111,47 +110,33 @@ public class ChangeSingleOfficeView extends Div implements AfterNavigationObserv
     }
 
     private Component createTitle() {
-        return new H3("Seat " + seat.getSeatNumber());
+        return new H3("Manage " + office.getName());
     }
 
-    private Component createFormLayout() throws BadRequestException {
+    private Component createFormLayout() {
         FormLayout formLayout = new FormLayout();
 
-        List<String> statusList = new ArrayList<>();
-        Arrays.stream(AvailabilityStatus.values()).forEach(s -> statusList.add(s.name()));
+        officeName.setWidth("120px");
+        officeName.setLabel("Office Name");
+        officeName.setValue(office.getName());
 
-        List<String> seatTypeList = new ArrayList<>();
-        Arrays.stream(SeatType.values()).forEach(s -> seatTypeList.add(s.name()));
+        city.setWidth("120px");
+        city.setLabel("City");
+        city.setValue(address.getCity());
 
-        List<String> officeList = new ArrayList<>();
-        officeController.all().forEach(o -> officeList.add(o.getName()));
+        country.setWidth("120px");
+        country.setLabel("Country");
+        country.setValue(address.getCountry());
 
-        List<String> equipmentList = new ArrayList<>();
-        equipmentController.all().forEach(e -> equipmentList.add(e.getName()));
+        postal_code.setWidth("120px");
+        postal_code.setLabel("Postal Code");
+        postal_code.setValue(address.getPostalCode());
 
-        List<String> currentEquipment = new ArrayList<>(seatController.getEquipment(seat.getId()));
+        street.setWidth("120px");
+        street.setLabel("Street");
+        street.setValue(address.getStreet());
 
-        reservationStatus.setWidth("120px");
-        reservationStatus.setLabel("Reservation Status");
-        reservationStatus.setItems(statusList);
-        reservationStatus.setValue(seat.getStatus().name());
-
-        seatType.setWidth("120px");
-        seatType.setLabel("Seat Type");
-        seatType.setItems(seatTypeList);
-        seatType.setValue(seat.getType().name());
-
-        office.setWidth("120px");
-        office.setLabel("Office");
-        office.setItems(officeList);
-        office.setValue(officeController.getOffice(seat.getOfficeID()).getName());
-
-        equipment.setWidth("120px");
-        equipment.setLabel("Equipment");
-        equipment.setItems(equipmentList);
-        equipment.select(currentEquipment);
-
-        formLayout.add(reservationStatus, seatType, office, equipment);
+        formLayout.add(officeName, city, country, postal_code, street);
         return formLayout;
     }
 
