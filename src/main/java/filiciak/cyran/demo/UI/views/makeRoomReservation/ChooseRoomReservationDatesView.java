@@ -1,4 +1,4 @@
-package filiciak.cyran.demo.UI.views.makeSeatReservation;
+package filiciak.cyran.demo.UI.views.makeRoomReservation;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
@@ -14,38 +14,35 @@ import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import filiciak.cyran.demo.Controllers.SeatReservedController;
+import filiciak.cyran.demo.Controllers.ConferenceRoomReservedController;
 import filiciak.cyran.demo.Controllers.UserController;
-import filiciak.cyran.demo.Entities.ReservationStatus;
-import filiciak.cyran.demo.Entities.Seat;
-import filiciak.cyran.demo.Entities.SeatReserved;
-import filiciak.cyran.demo.Entities.UserInstance;
+import filiciak.cyran.demo.Entities.*;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
 import filiciak.cyran.demo.UI.views.MainLayout;
-import filiciak.cyran.demo.UI.views.adminViews.office.ManageOfficeView;
 import filiciak.cyran.demo.UI.views.login.LoginView;
+import filiciak.cyran.demo.UI.views.makeSeatReservation.MakeSeatReservationView;
 import filiciak.cyran.demo.UI.views.yourReservations.YourReservationsView;
 
-@PageTitle("Reserve Seat")
-@Route(value = "reserve-seat", layout = MainLayout.class)
-public class ChooseDatesView extends Div implements AfterNavigationObserver {
+@PageTitle("Reserve Room")
+@Route(value = "reserve-room", layout = MainLayout.class)
+public class ChooseRoomReservationDatesView extends Div implements AfterNavigationObserver {
 
     private DatePicker fromDate = new DatePicker();
     private DatePicker toDate = new DatePicker();
     private Button reserve = new Button("Reserve");
     private Button cancel = new Button("Cancel");
 
-    Seat seat;
-    SeatReservedController seatReservedController;
+    ConferenceRoom conferenceRoom;
+    ConferenceRoomReservedController conferenceRoomReservedController;
     UserController userController;
 
-    public ChooseDatesView(SeatReservedController seatReservedController, UserController userController) {
-        this.seatReservedController = seatReservedController;
+    public ChooseRoomReservationDatesView(ConferenceRoomReservedController conferenceRoomReservedController, UserController userController) {
+        this.conferenceRoomReservedController = conferenceRoomReservedController;
         this.userController = userController;
-        if(ComponentUtil.getData(UI.getCurrent(), Seat.class) == null) {
+        if(ComponentUtil.getData(UI.getCurrent(), ConferenceRoom.class) == null) {
             UI.getCurrent().navigate(MakeSeatReservationView.class);
         }
-        seat = ComponentUtil.getData(UI.getCurrent(), Seat.class);
+        conferenceRoom = ComponentUtil.getData(UI.getCurrent(), ConferenceRoom.class);
 
         addClassName("delete-seat-from-office");
 
@@ -55,15 +52,15 @@ public class ChooseDatesView extends Div implements AfterNavigationObserver {
 
         cancel.addClickListener(e -> UI.getCurrent().navigate(MakeSeatReservationView.class));
         reserve.addClickListener(e -> {
-            SeatReserved seatReserved = new SeatReserved();
-            seatReserved.setSeat(seat);
-            seatReserved.setFromDate(fromDate.getValue());
-            seatReserved.setToDate(toDate.getValue());
-            seatReserved.setStatus(ReservationStatus.ACTIVE);
-            seatReserved.setUser(userController.getUser(UserInstance.getInstance().getUsername()));
+            ConferenceRoomReserved conferenceRoomReserved = new ConferenceRoomReserved();
+            conferenceRoomReserved.setConferenceRoom(conferenceRoom);
+            conferenceRoomReserved.setFromDate(fromDate.getValue());
+            conferenceRoomReserved.setToDate(toDate.getValue());
+            conferenceRoomReserved.setStatus(ReservationStatus.ACTIVE);
+            conferenceRoomReserved.setUser(userController.getUser(UserInstance.getInstance().getUsername()));
 
             try {
-                seatReservedController.createReservation(seatReserved);
+                conferenceRoomReservedController.createReservation(conferenceRoomReserved);
             } catch (BadRequestException ex) {
                 throw new RuntimeException(ex);
             }

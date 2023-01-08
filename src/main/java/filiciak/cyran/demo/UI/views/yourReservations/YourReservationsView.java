@@ -48,7 +48,9 @@ public class YourReservationsView extends Div implements AfterNavigationObserver
         seatReservedController.allForUser().stream()
                 .filter(seat -> seat.getStatus().equals(ReservationStatus.ACTIVE))
                 .forEach(seat -> seatsContainer.add(new SeatReservedViewCard(seat, seatReservedController)));
-        //conferenceRoomReservedController.allForUser().forEach(room -> roomsContainer.add(new SeatReservedViewCard(conferenceRoomReservedController)));
+        conferenceRoomReservedController.allForUser().stream()
+                .filter(room -> room.getStatus().equals(ReservationStatus.ACTIVE))
+                .forEach(room -> roomsContainer.add(new RoomReservedViewCard(room, conferenceRoomReservedController)));
     }
 
     private void constructUI() {

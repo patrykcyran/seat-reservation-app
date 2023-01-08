@@ -1,21 +1,15 @@
 package filiciak.cyran.demo.UI.views.yourReservations;
 
-import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.ListItem;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import filiciak.cyran.demo.Controllers.SeatController;
 import filiciak.cyran.demo.Controllers.SeatReservedController;
-import filiciak.cyran.demo.Entities.AvailabilityStatus;
 import filiciak.cyran.demo.Entities.ReservationStatus;
-import filiciak.cyran.demo.Entities.Seat;
 import filiciak.cyran.demo.Entities.SeatReserved;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
-import filiciak.cyran.demo.UI.views.makeSeatReservation.ChooseDatesView;
 
 import java.util.ArrayList;
 import java.util.List;

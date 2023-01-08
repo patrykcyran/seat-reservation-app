@@ -8,12 +8,9 @@ import com.vaadin.flow.component.html.ListItem;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import filiciak.cyran.demo.Controllers.SeatController;
-import filiciak.cyran.demo.Controllers.SeatReservedController;
 import filiciak.cyran.demo.Entities.AvailabilityStatus;
-import filiciak.cyran.demo.Entities.Equipment;
 import filiciak.cyran.demo.Entities.Seat;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
-import filiciak.cyran.demo.Services.SeatReservedService;
 
 import java.util.List;
 
@@ -40,7 +37,6 @@ public class SeatViewCard extends ListItem {
         header.addClassNames(LumoUtility.FontSize.XLARGE, LumoUtility.FontWeight.SEMIBOLD);
         header.setText("Seat number: " + seat.getSeatNumber());
 
-        //TODO: Add equipment for seat
 
         Span equipment = new Span();
         equipment.addClassNames(LumoUtility.FontSize.XLARGE, LumoUtility.FontWeight.SEMIBOLD);
@@ -63,7 +59,7 @@ public class SeatViewCard extends ListItem {
 
         button.addClickListener(e -> {
             ComponentUtil.setData(UI.getCurrent(), Seat.class, seat);
-            UI.getCurrent().navigate(ChooseDatesView.class);
+            UI.getCurrent().navigate(ChooseSeatReservationDatesView.class);
         });
 
         add(div, header, div2, equipment, div3, button);

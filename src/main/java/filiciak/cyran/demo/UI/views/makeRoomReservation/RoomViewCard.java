@@ -1,5 +1,7 @@
 package filiciak.cyran.demo.UI.views.makeRoomReservation;
 
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.ListItem;
@@ -9,6 +11,7 @@ import filiciak.cyran.demo.Controllers.ConferenceRoomController;
 import filiciak.cyran.demo.Entities.AvailabilityStatus;
 import filiciak.cyran.demo.Entities.ConferenceRoom;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
+import filiciak.cyran.demo.UI.views.makeSeatReservation.ChooseSeatReservationDatesView;
 
 import java.util.List;
 
@@ -35,8 +38,6 @@ public class RoomViewCard extends ListItem {
         header.addClassNames(LumoUtility.FontSize.XLARGE, LumoUtility.FontWeight.SEMIBOLD);
         header.setText("Room name: " + conferenceRoom.getName());
 
-        //TODO: Add equipment for room
-
         Span equipment = new Span();
         equipment.addClassNames(LumoUtility.FontSize.XLARGE, LumoUtility.FontWeight.SEMIBOLD);
         List<String> equipmentList = conferenceRoomController.getEquipment(conferenceRoom.getId());
@@ -56,12 +57,11 @@ public class RoomViewCard extends ListItem {
         div3.setHeight("20px");
         div3.setWidth("10px");
 
-        button.addClickListener(e -> reserveRoom(conferenceRoom));
+        button.addClickListener(e -> {
+            ComponentUtil.setData(UI.getCurrent(), ConferenceRoom.class, conferenceRoom);
+            UI.getCurrent().navigate(ChooseRoomReservationDatesView.class);
+        });
 
         add(div, header, div2, equipment, div3, button);
-    }
-
-    private void reserveRoom(ConferenceRoom conferenceRoom) {
-
     }
 }

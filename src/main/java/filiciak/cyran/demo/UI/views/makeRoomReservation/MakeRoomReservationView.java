@@ -62,7 +62,7 @@ public class MakeRoomReservationView extends Div implements AfterNavigationObser
         officeContainer = new OrderedList();
         officeContainer.addClassNames(LumoUtility.Gap.MEDIUM, LumoUtility.Display.GRID, LumoUtility.ListStyleType.NONE, LumoUtility.Margin.LARGE, LumoUtility.Padding.NONE);
 
-        container.add(headerContainer, sortBy);
+        container.add(headerContainer);
         add(container, officeContainer);
     }
 
