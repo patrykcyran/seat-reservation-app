@@ -22,7 +22,6 @@ import filiciak.cyran.demo.Entities.ConferenceRoom;
 import filiciak.cyran.demo.Entities.UserInstance;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
 import filiciak.cyran.demo.UI.views.MainLayout;
-import filiciak.cyran.demo.UI.views.adminViews.seat.AddSeatView;
 import filiciak.cyran.demo.UI.views.login.LoginView;
 
 @PageTitle("Manage Rooms")

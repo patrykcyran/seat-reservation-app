@@ -16,11 +16,9 @@ import com.vaadin.flow.router.Route;
 import filiciak.cyran.demo.Controllers.ConferenceRoomController;
 import filiciak.cyran.demo.Controllers.EquipmentController;
 import filiciak.cyran.demo.Controllers.OfficeController;
-import filiciak.cyran.demo.Controllers.SeatController;
 import filiciak.cyran.demo.Entities.*;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
 import filiciak.cyran.demo.UI.views.MainLayout;
-import filiciak.cyran.demo.UI.views.adminViews.seat.ManageSeatView;
 import filiciak.cyran.demo.UI.views.login.LoginView;
 import org.springframework.beans.factory.annotation.Autowired;
 

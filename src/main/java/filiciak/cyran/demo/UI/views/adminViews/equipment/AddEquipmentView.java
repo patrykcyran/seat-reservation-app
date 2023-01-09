@@ -50,6 +50,11 @@ public class AddEquipmentView extends Div implements AfterNavigationObserver, Ha
 
         cancel.addClickListener(e -> UI.getCurrent().navigate(ManageEquipmentView.class));
         add.addClickListener(e -> {
+            if (equipmentName.isEmpty()) {
+                Notification.show("All fields must be filled up", 5000, Notification.Position.MIDDLE);
+                return;
+            }
+
             equipment.setName(equipmentName.getValue());
 
             try {

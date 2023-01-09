@@ -8,6 +8,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.AfterNavigationEvent;
@@ -54,6 +55,11 @@ public class ChangeSingleEquipmentView extends Div implements AfterNavigationObs
 
         cancel.addClickListener(e -> UI.getCurrent().navigate(ManageEquipmentView.class));
         save.addClickListener(e -> {
+            if (equipmentName.isEmpty()) {
+                Notification.show("All fields must be filled up", 5000, Notification.Position.MIDDLE);
+                return;
+            }
+
             equipment.setName(equipmentName.getValue());
 
             try {

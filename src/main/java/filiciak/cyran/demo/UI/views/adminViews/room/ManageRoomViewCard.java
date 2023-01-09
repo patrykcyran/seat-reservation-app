@@ -17,7 +17,6 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import filiciak.cyran.demo.Controllers.ConferenceRoomController;
 import filiciak.cyran.demo.Entities.AvailabilityStatus;
 import filiciak.cyran.demo.Entities.ConferenceRoom;
-import filiciak.cyran.demo.Entities.Seat;
 import filiciak.cyran.demo.Entities.UserInstance;
 import filiciak.cyran.demo.Exceptions.BadRequestException;
 
