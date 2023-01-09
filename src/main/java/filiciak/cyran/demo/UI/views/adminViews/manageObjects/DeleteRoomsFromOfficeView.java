@@ -45,7 +45,7 @@ public class DeleteRoomsFromOfficeView extends Div implements AfterNavigationObs
             UI.getCurrent().navigate(ManageOfficeView.class);
         }
         office = ComponentUtil.getData(UI.getCurrent(), Office.class);
-        addClassName("delete-seat-from-office");
+        addClassName("delete-room-from-office");
 
         add(createTitle());
         add(createFormLayout());
@@ -54,9 +54,9 @@ public class DeleteRoomsFromOfficeView extends Div implements AfterNavigationObs
         cancel.addClickListener(e -> UI.getCurrent().navigate(ManageOfficeView.class));
         delete.addClickListener(e -> {
 
-            Set<String> selectedSeatsSet = roomsToDelete.getSelectedItems();
-            List<String> selectedSeatsList = selectedSeatsSet.stream().toList();
-            selectedSeatsList.forEach(r -> {
+            Set<String> selectedRoomSet = roomsToDelete.getSelectedItems();
+            List<String> selectedRoomsList = selectedRoomSet.stream().toList();
+            selectedRoomsList.forEach(r -> {
                 try {
                     conferenceRoomController.deleteRoom((conferenceRoomController.getRoomByNameAndOfficeId(r, office.getId()).getId()),"admin");
                 } catch (BadRequestException ex) {
@@ -69,7 +69,7 @@ public class DeleteRoomsFromOfficeView extends Div implements AfterNavigationObs
     }
 
     private Component createTitle() {
-        return new H3("Delete seats");
+        return new H3("Delete Rooms");
     }
 
     private Component createFormLayout() {
@@ -80,7 +80,7 @@ public class DeleteRoomsFromOfficeView extends Div implements AfterNavigationObs
         roomsList.forEach(s -> rooms.add(s.getName()));
 
         roomsToDelete.setWidth("120px");
-        roomsToDelete.setLabel("Select seats to delete");
+        roomsToDelete.setLabel("Select rooms to delete");
         roomsToDelete.setItems(rooms);
 
         formLayout.add(roomsToDelete);

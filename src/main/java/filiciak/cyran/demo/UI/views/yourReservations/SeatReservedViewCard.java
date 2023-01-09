@@ -21,12 +21,15 @@ public class SeatReservedViewCard extends ListItem {
     public SeatReservedViewCard(SeatReserved seatReserved, SeatReservedController seatReservedController) {
         this.seatReservedController = seatReservedController;
 
-        addClassNames(LumoUtility.Background.CONTRAST_5, LumoUtility.Display.FLEX, LumoUtility.FlexDirection.COLUMN, LumoUtility.AlignItems.START, LumoUtility.Padding.MEDIUM,
+        addClassNames(LumoUtility.Background.CONTRAST_5, LumoUtility.Display.FLEX, LumoUtility.FlexDirection.COLUMN,
+                LumoUtility.AlignItems.START, LumoUtility.Padding.MEDIUM,
                 LumoUtility.BorderRadius.LARGE);
 
         Div div = new Div();
-        div.addClassNames(LumoUtility.Background.CONTRAST, LumoUtility.Display.FLEX, LumoUtility.AlignItems.CENTER, LumoUtility.JustifyContent.CENTER,
-                LumoUtility.Margin.Bottom.MEDIUM, LumoUtility.Overflow.HIDDEN, LumoUtility.BorderRadius.MEDIUM, LumoUtility.Width.FULL);
+        div.addClassNames(LumoUtility.Background.CONTRAST, LumoUtility.Display.FLEX, LumoUtility.AlignItems.CENTER,
+                LumoUtility.JustifyContent.CENTER,
+                LumoUtility.Margin.Bottom.MEDIUM, LumoUtility.Overflow.HIDDEN, LumoUtility.BorderRadius.MEDIUM,
+                LumoUtility.Width.FULL);
         div.setHeight("60px");
         div.setWidth("40px");
 
