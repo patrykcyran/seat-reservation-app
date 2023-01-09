@@ -103,6 +103,12 @@ public class SeatController {
 
     @GetMapping("/max")
     public Seat getSeatWithHighestNumber() {
-        return seatService.findSeatWithHighestNumber();
+        Seat seat = seatService.findSeatWithHighestNumber();
+        if (seat == null){
+            Seat newSeat = new Seat();
+            newSeat.setSeatNumber(0);
+            return newSeat;
+        }
+        return seat;
     }
 }
