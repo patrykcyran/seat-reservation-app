@@ -44,7 +44,6 @@ public class AdminLoginView extends Div {
         add(createButtonLayout());
         add(createBackButtonLayout());
 
-        passwordField.setValue("admin");
         backButton.addClickListener(e -> UI.getCurrent().navigate(LoginView.class));
 
         loginButton.addClickListener(e -> {

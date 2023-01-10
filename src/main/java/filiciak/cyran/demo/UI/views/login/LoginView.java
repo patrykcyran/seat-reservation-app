@@ -37,8 +37,6 @@ public class LoginView extends Div {
         add(createFormLayout());
         add(createButtonLayout());
 
-        usernameTextField.setValue("Patryk");
-
         loginButton.addClickListener(e -> {
             String username;
             username = usernameTextField.getValue();
